@@ -5,10 +5,12 @@ using System.Web;
 
 namespace REST_Service.Models
 {
-    public class User
+    public class Authentification
     {
-        public User(string username, string password)
+        public Authentification(string username, string password)
         {
+            Username = username;
+            Password = password;
             var guid = Guid.NewGuid();
             TokenKey = Convert.ToBase64String(guid.ToByteArray());
         }
