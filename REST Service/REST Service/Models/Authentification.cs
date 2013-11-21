@@ -12,11 +12,21 @@ namespace REST_Service.Models
             Username = username;
             Password = password;
             var guid = Guid.NewGuid();
-            TokenKey = Convert.ToBase64String(guid.ToByteArray());
+            AccessToken = Convert.ToBase64String(guid.ToByteArray());
         }
 
         public string Username { get; set; }
         public string Password { get; set; }
-        public string TokenKey { get; private set; }
+        public string AccessToken { get; private set; }
+    }
+
+    public class AuthentificationResponse
+    {
+        public string AccessToken { get; set ; }
+
+        public AuthentificationResponse()
+        {
+            
+        }
     }
 }

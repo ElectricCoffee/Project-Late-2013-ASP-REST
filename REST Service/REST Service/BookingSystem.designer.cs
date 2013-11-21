@@ -22,60 +22,59 @@ namespace REST_Service
 	using System;
 	
 	
-	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="Database1")]
-	public partial class DataClassesBookingDataContext : System.Data.Linq.DataContext
+	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="LærerbookingSystem")]
+	public partial class BookingSystemDataContext : System.Data.Linq.DataContext
 	{
 		
 		private static System.Data.Linq.Mapping.MappingSource mappingSource = new AttributeMappingSource();
 		
     #region Extensibility Method Definitions
     partial void OnCreated();
-    partial void InsertBruger(Bruger instance);
-    partial void UpdateBruger(Bruger instance);
-    partial void DeleteBruger(Bruger instance);
+    partial void InsertBruger(User instance);
+    partial void UpdateBruger(User instance);
+    partial void DeleteBruger(User instance);
     #endregion
 		
-		public DataClassesBookingDataContext() : 
-				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["Database1ConnectionString"].ConnectionString, mappingSource)
+		public BookingSystemDataContext() : 
+				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["ProductionConnection"].ConnectionString, mappingSource)
 		{
 			OnCreated();
 		}
 		
-		public DataClassesBookingDataContext(string connection) : 
+		public BookingSystemDataContext(string connection) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
 		}
 		
-		public DataClassesBookingDataContext(System.Data.IDbConnection connection) : 
+		public BookingSystemDataContext(System.Data.IDbConnection connection) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
 		}
 		
-		public DataClassesBookingDataContext(string connection, System.Data.Linq.Mapping.MappingSource mappingSource) : 
+		public BookingSystemDataContext(string connection, System.Data.Linq.Mapping.MappingSource mappingSource) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
 		}
 		
-		public DataClassesBookingDataContext(System.Data.IDbConnection connection, System.Data.Linq.Mapping.MappingSource mappingSource) : 
+		public BookingSystemDataContext(System.Data.IDbConnection connection, System.Data.Linq.Mapping.MappingSource mappingSource) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
 		}
 		
-		public System.Data.Linq.Table<Bruger> Brugers
-		{
+		public System.Data.Linq.Table<User> Users		{
 			get
 			{
-				return this.GetTable<Bruger>();
+				return this.GetTable<User>();
 			}
 		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Bruger")]
-	public partial class Bruger : INotifyPropertyChanging, INotifyPropertyChanged
+	public partial class User : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
@@ -102,7 +101,7 @@ namespace REST_Service
     partial void OnNavn_idChanged();
     #endregion
 		
-		public Bruger()
+		public User()
 		{
 			OnCreated();
 		}
@@ -127,8 +126,8 @@ namespace REST_Service
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Brugernavn", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
-		public string Brugernavn
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[Brugernavn]", Storage="_Brugernavn", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string Username
 		{
 			get
 			{
@@ -147,7 +146,7 @@ namespace REST_Service
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Password", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[Password]", Storage="_Password", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
 		public string Password
 		{
 			get
@@ -167,8 +166,8 @@ namespace REST_Service
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Navn_id", DbType="Int NOT NULL")]
-		public int Navn_id
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[Navn_id]", Storage="_Navn_id", DbType="Int NOT NULL")]
+		public int NavnId
 		{
 			get
 			{

@@ -42,7 +42,7 @@ namespace REST_Service.Repositories
 
         public bool Exists(string tokenKey)
         {
-            return _list.Exists(a => a.TokenKey == tokenKey);
+            return _list.Exists(a => a.AccessToken == tokenKey);
         }
     }
 }

@@ -164,10 +164,10 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
-    <Compile Include="DataClassesBooking.designer.cs">
+    <Compile Include="BookingSystem.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>DataClassesBooking.dbml</DependentUpon>
+      <DependentUpon>BookingSystem.dbml</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -249,9 +249,9 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\HelpPageApiModel.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
-    <Content Include="DataClassesBooking.dbml">
+    <Content Include="BookingSystem.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
-      <LastGenOutput>DataClassesBooking.designer.cs</LastGenOutput>
+      <LastGenOutput>BookingSystem.designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </Content>
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
@@ -305,8 +305,8 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="DataClassesBooking.dbml.layout">
-      <DependentUpon>DataClassesBooking.dbml</DependentUpon>
+    <None Include="BookingSystem.dbml.layout">
+      <DependentUpon>BookingSystem.dbml</DependentUpon>
     </None>
   </ItemGroup>
   <PropertyGroup>
