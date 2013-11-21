@@ -27,7 +27,7 @@ namespace REST_Service_Unit_Test
         [TestMethod, Description("An accesstoken should be received if succesful")]
         public void Authentification_Succesful()
         {
-            string expected
+            var expected = "";
             var loginCtrl = new Rest.Controllers.LoginController();
             var actual = loginCtrl.Get("johndoe", "12345678");
 

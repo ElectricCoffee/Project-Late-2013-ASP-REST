@@ -13,14 +13,18 @@ namespace REST_Service_Unit_Test
     class TestInit
     {
         private TransactionScope _transactionScope;
+        private readonly string _databaseName;
 
-        public const string DATABASE_NAME = global::System.Configuration.ConfigurationManager.ConnectionStrings["TestConnection"].ConnectionString;
+        public TestInit() {
+            _databaseName = global::System.Configuration.ConfigurationManager.ConnectionStrings["TestConnection"].ConnectionString;
+            EnsureDataExists();
+        }
+
         public BookingSystemDataContext Context { get; private set; }
 
-        [TestInitialize]
         public void EnsureDataExists()
         {
-            Context = new BookingSystemDataContext(DATABASE_NAME);
+            Context = new BookingSystemDataContext(_databaseName);
 
             if (!Context.DatabaseExists())
                 Context.CreateDatabase();
