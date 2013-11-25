@@ -24,6 +24,13 @@ namespace REST_Service.Controllers
             _db = new BookingSystemDataContext();
         }
 
+        /// <summary>
+        /// Generates a Get response containing an access level and a GUID.
+        /// This response is based off of login credentials of a user trying to access the system.
+        /// </summary>
+        /// <param name="username">The Username of the person logging in</param>
+        /// <param name="password">The Password of the person logging in</param>
+        /// <returns>Nested Key-Value pairs that represent the access and access level of the person logging in.</returns>
         public KeyValuePair<string, KeyValuePair<string,string>> Get([FromUri] string username, [FromUri] string password)
         {
             Bruger br = _db.Brugers.FirstOrDefault(b => b.Brugernavn == username && b.Password == password);
@@ -32,15 +39,14 @@ namespace REST_Service.Controllers
 
             if (br != null)
             {
+                // gets the access level depending on which table the user exists in
                 accessLevel = 
                     _db.Administrators.FirstOrDefault(a => a.Bruger_id == br._id) != null ? 3 :
                     _db.Lærers.FirstOrDefault        (l => l.Bruger_id == br._id) != null ? 2 :
                     _db.Studerendes.FirstOrDefault   (s => s.Bruger_id == br._id) != null ? 1 : 0;
-            }
-
-            if (_db.Brugers.FirstOrDefault(b => b.Brugernavn == username && b.Password == password) != null)
-            {
+            
                 var auth = new Models.Authentification(username, password);
+                
                 _authRepo.Add(auth);
 
                 Debug.WriteLine(string.Format(
