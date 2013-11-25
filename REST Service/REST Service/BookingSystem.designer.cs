@@ -23,26 +23,32 @@ namespace REST_Service
 	
 	
 	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="LærerbookingSystem")]
-	public partial class BookingSystemDataContext : System.Data.Linq.DataContext
+    public partial class BookingSystemDataContext : System.Data.Linq.DataContext
 	{
 		
 		private static System.Data.Linq.Mapping.MappingSource mappingSource = new AttributeMappingSource();
 		
-	#region Extensibility Method Definitions
-	partial void OnCreated();
-	partial void InsertBruger(Bruger instance);
-	partial void UpdateBruger(Bruger instance);
-	partial void DeleteBruger(Bruger instance);
-	partial void InsertLærer(Lærer instance);
-	partial void UpdateLærer(Lærer instance);
-	partial void DeleteLærer(Lærer instance);
-	partial void InsertStuderende(Studerende instance);
-	partial void UpdateStuderende(Studerende instance);
-	partial void DeleteStuderende(Studerende instance);
-	partial void InsertAdministrator(Administrator instance);
-	partial void UpdateAdministrator(Administrator instance);
-	partial void DeleteAdministrator(Administrator instance);
-	#endregion
+    #region Extensibility Method Definitions
+    partial void OnCreated();
+    partial void InsertBruger(Bruger instance);
+    partial void UpdateBruger(Bruger instance);
+    partial void DeleteBruger(Bruger instance);
+    partial void InsertLærer(Lærer instance);
+    partial void UpdateLærer(Lærer instance);
+    partial void DeleteLærer(Lærer instance);
+    partial void InsertStuderende(Studerende instance);
+    partial void UpdateStuderende(Studerende instance);
+    partial void DeleteStuderende(Studerende instance);
+    partial void InsertAdministrator(Administrator instance);
+    partial void UpdateAdministrator(Administrator instance);
+    partial void DeleteAdministrator(Administrator instance);
+    partial void InsertNavn(Navn instance);
+    partial void UpdateNavn(Navn instance);
+    partial void DeleteNavn(Navn instance);
+    partial void InsertHold(Hold instance);
+    partial void UpdateHold(Hold instance);
+    partial void DeleteHold(Hold instance);
+    #endregion
 		
 		public BookingSystemDataContext() : 
 				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["LærerbookingSystemConnectionString"].ConnectionString, mappingSource)
@@ -105,6 +111,30 @@ namespace REST_Service
 				return this.GetTable<Administrator>();
 			}
 		}
+		
+		public System.Data.Linq.Table<Navn> Navns
+		{
+			get
+			{
+				return this.GetTable<Navn>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Hold> Holds
+		{
+			get
+			{
+				return this.GetTable<Hold>();
+			}
+		}
+		
+		public System.Data.Linq.Table<HoldFag> HoldFags
+		{
+			get
+			{
+				return this.GetTable<HoldFag>();
+			}
+		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Bruger")]
@@ -127,25 +157,28 @@ namespace REST_Service
 		
 		private EntitySet<Administrator> _Administrators;
 		
-	#region Extensibility Method Definitions
-	partial void OnLoaded();
-	partial void OnValidate(System.Data.Linq.ChangeAction action);
-	partial void OnCreated();
-	partial void On_idChanging(int value);
-	partial void On_idChanged();
-	partial void OnBrugernavnChanging(string value);
-	partial void OnBrugernavnChanged();
-	partial void OnPasswordChanging(string value);
-	partial void OnPasswordChanged();
-	partial void OnNavn_idChanging(int value);
-	partial void OnNavn_idChanged();
-	#endregion
+		private EntityRef<Navn> _Navn;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void On_idChanging(int value);
+    partial void On_idChanged();
+    partial void OnBrugernavnChanging(string value);
+    partial void OnBrugernavnChanged();
+    partial void OnPasswordChanging(string value);
+    partial void OnPasswordChanged();
+    partial void OnNavn_idChanging(int value);
+    partial void OnNavn_idChanged();
+    #endregion
 		
 		public Bruger()
 		{
 			this._Lærers = new EntitySet<Lærer>(new Action<Lærer>(this.attach_Lærers), new Action<Lærer>(this.detach_Lærers));
 			this._Studerendes = new EntitySet<Studerende>(new Action<Studerende>(this.attach_Studerendes), new Action<Studerende>(this.detach_Studerendes));
 			this._Administrators = new EntitySet<Administrator>(new Action<Administrator>(this.attach_Administrators), new Action<Administrator>(this.detach_Administrators));
+			this._Navn = default(EntityRef<Navn>);
 			OnCreated();
 		}
 		
@@ -220,6 +253,10 @@ namespace REST_Service
 			{
 				if ((this._Navn_id != value))
 				{
+					if (this._Navn.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnNavn_idChanging(value);
 					this.SendPropertyChanging();
 					this._Navn_id = value;
@@ -265,6 +302,40 @@ namespace REST_Service
 			set
 			{
 				this._Administrators.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Navn_Bruger", Storage="_Navn", ThisKey="Navn_id", OtherKey="_id", IsForeignKey=true)]
+		public Navn Navn
+		{
+			get
+			{
+				return this._Navn.Entity;
+			}
+			set
+			{
+				Navn previousValue = this._Navn.Entity;
+				if (((previousValue != value) 
+							|| (this._Navn.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Navn.Entity = null;
+						previousValue.Brugers.Remove(this);
+					}
+					this._Navn.Entity = value;
+					if ((value != null))
+					{
+						value.Brugers.Add(this);
+						this._Navn_id = value._id;
+					}
+					else
+					{
+						this._Navn_id = default(int);
+					}
+					this.SendPropertyChanged("Navn");
+				}
 			}
 		}
 		
@@ -337,15 +408,15 @@ namespace REST_Service
 		
 		private EntityRef<Bruger> _Bruger;
 		
-	#region Extensibility Method Definitions
-	partial void OnLoaded();
-	partial void OnValidate(System.Data.Linq.ChangeAction action);
-	partial void OnCreated();
-	partial void On_idChanging(int value);
-	partial void On_idChanged();
-	partial void OnBruger_idChanging(int value);
-	partial void OnBruger_idChanged();
-	#endregion
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void On_idChanging(int value);
+    partial void On_idChanged();
+    partial void OnBruger_idChanging(int value);
+    partial void OnBruger_idChanged();
+    #endregion
 		
 		public Lærer()
 		{
@@ -468,23 +539,26 @@ namespace REST_Service
 		
 		private EntityRef<Bruger> _Bruger;
 		
-	#region Extensibility Method Definitions
-	partial void OnLoaded();
-	partial void OnValidate(System.Data.Linq.ChangeAction action);
-	partial void OnCreated();
-	partial void On_idChanging(int value);
-	partial void On_idChanged();
-	partial void OnGodkendtChanging(byte value);
-	partial void OnGodkendtChanged();
-	partial void OnBruger_idChanging(int value);
-	partial void OnBruger_idChanged();
-	partial void OnHold_idChanging(int value);
-	partial void OnHold_idChanged();
-	#endregion
+		private EntityRef<Hold> _Hold;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void On_idChanging(int value);
+    partial void On_idChanged();
+    partial void OnGodkendtChanging(byte value);
+    partial void OnGodkendtChanged();
+    partial void OnBruger_idChanging(int value);
+    partial void OnBruger_idChanged();
+    partial void OnHold_idChanging(int value);
+    partial void OnHold_idChanged();
+    #endregion
 		
 		public Studerende()
 		{
 			this._Bruger = default(EntityRef<Bruger>);
+			this._Hold = default(EntityRef<Hold>);
 			OnCreated();
 		}
 		
@@ -563,6 +637,10 @@ namespace REST_Service
 			{
 				if ((this._Hold_id != value))
 				{
+					if (this._Hold.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnHold_idChanging(value);
 					this.SendPropertyChanging();
 					this._Hold_id = value;
@@ -606,6 +684,40 @@ namespace REST_Service
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Hold_Studerende", Storage="_Hold", ThisKey="Hold_id", OtherKey="_id", IsForeignKey=true)]
+		public Hold Hold
+		{
+			get
+			{
+				return this._Hold.Entity;
+			}
+			set
+			{
+				Hold previousValue = this._Hold.Entity;
+				if (((previousValue != value) 
+							|| (this._Hold.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Hold.Entity = null;
+						previousValue.Studerendes.Remove(this);
+					}
+					this._Hold.Entity = value;
+					if ((value != null))
+					{
+						value.Studerendes.Add(this);
+						this._Hold_id = value._id;
+					}
+					else
+					{
+						this._Hold_id = default(int);
+					}
+					this.SendPropertyChanged("Hold");
+				}
+			}
+		}
+		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -639,15 +751,15 @@ namespace REST_Service
 		
 		private EntityRef<Bruger> _Bruger;
 		
-	#region Extensibility Method Definitions
-	partial void OnLoaded();
-	partial void OnValidate(System.Data.Linq.ChangeAction action);
-	partial void OnCreated();
-	partial void On_idChanging(int value);
-	partial void On_idChanged();
-	partial void OnBruger_idChanging(int value);
-	partial void OnBruger_idChanged();
-	#endregion
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void On_idChanging(int value);
+    partial void On_idChanged();
+    partial void OnBruger_idChanging(int value);
+    partial void OnBruger_idChanged();
+    #endregion
 		
 		public Administrator()
 		{
@@ -750,6 +862,303 @@ namespace REST_Service
 			if ((this.PropertyChanged != null))
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Navn")]
+	public partial class Navn : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int @__id;
+		
+		private string _Fornavn;
+		
+		private string _Efternavn;
+		
+		private EntitySet<Bruger> _Brugers;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void On_idChanging(int value);
+    partial void On_idChanged();
+    partial void OnFornavnChanging(string value);
+    partial void OnFornavnChanged();
+    partial void OnEfternavnChanging(string value);
+    partial void OnEfternavnChanged();
+    #endregion
+		
+		public Navn()
+		{
+			this._Brugers = new EntitySet<Bruger>(new Action<Bruger>(this.attach_Brugers), new Action<Bruger>(this.detach_Brugers));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[_id]", Storage="__id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int _id
+		{
+			get
+			{
+				return this.@__id;
+			}
+			set
+			{
+				if ((this.@__id != value))
+				{
+					this.On_idChanging(value);
+					this.SendPropertyChanging();
+					this.@__id = value;
+					this.SendPropertyChanged("_id");
+					this.On_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Fornavn", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string Fornavn
+		{
+			get
+			{
+				return this._Fornavn;
+			}
+			set
+			{
+				if ((this._Fornavn != value))
+				{
+					this.OnFornavnChanging(value);
+					this.SendPropertyChanging();
+					this._Fornavn = value;
+					this.SendPropertyChanged("Fornavn");
+					this.OnFornavnChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Efternavn", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string Efternavn
+		{
+			get
+			{
+				return this._Efternavn;
+			}
+			set
+			{
+				if ((this._Efternavn != value))
+				{
+					this.OnEfternavnChanging(value);
+					this.SendPropertyChanging();
+					this._Efternavn = value;
+					this.SendPropertyChanged("Efternavn");
+					this.OnEfternavnChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Navn_Bruger", Storage="_Brugers", ThisKey="_id", OtherKey="Navn_id")]
+		public EntitySet<Bruger> Brugers
+		{
+			get
+			{
+				return this._Brugers;
+			}
+			set
+			{
+				this._Brugers.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Brugers(Bruger entity)
+		{
+			this.SendPropertyChanging();
+			entity.Navn = this;
+		}
+		
+		private void detach_Brugers(Bruger entity)
+		{
+			this.SendPropertyChanging();
+			entity.Navn = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Hold")]
+	public partial class Hold : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int @__id;
+		
+		private string _Navn;
+		
+		private EntitySet<Studerende> _Studerendes;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void On_idChanging(int value);
+    partial void On_idChanged();
+    partial void OnNavnChanging(string value);
+    partial void OnNavnChanged();
+    #endregion
+		
+		public Hold()
+		{
+			this._Studerendes = new EntitySet<Studerende>(new Action<Studerende>(this.attach_Studerendes), new Action<Studerende>(this.detach_Studerendes));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[_id]", Storage="__id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int _id
+		{
+			get
+			{
+				return this.@__id;
+			}
+			set
+			{
+				if ((this.@__id != value))
+				{
+					this.On_idChanging(value);
+					this.SendPropertyChanging();
+					this.@__id = value;
+					this.SendPropertyChanged("_id");
+					this.On_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Navn", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string Navn
+		{
+			get
+			{
+				return this._Navn;
+			}
+			set
+			{
+				if ((this._Navn != value))
+				{
+					this.OnNavnChanging(value);
+					this.SendPropertyChanging();
+					this._Navn = value;
+					this.SendPropertyChanged("Navn");
+					this.OnNavnChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Hold_Studerende", Storage="_Studerendes", ThisKey="_id", OtherKey="Hold_id")]
+		public EntitySet<Studerende> Studerendes
+		{
+			get
+			{
+				return this._Studerendes;
+			}
+			set
+			{
+				this._Studerendes.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Studerendes(Studerende entity)
+		{
+			this.SendPropertyChanging();
+			entity.Hold = this;
+		}
+		
+		private void detach_Studerendes(Studerende entity)
+		{
+			this.SendPropertyChanging();
+			entity.Hold = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.HoldFag")]
+	public partial class HoldFag
+	{
+		
+		private int _Hold_id;
+		
+		private int _Fag_id;
+		
+		public HoldFag()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Hold_id", DbType="Int NOT NULL")]
+		public int Hold_id
+		{
+			get
+			{
+				return this._Hold_id;
+			}
+			set
+			{
+				if ((this._Hold_id != value))
+				{
+					this._Hold_id = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Fag_id", DbType="Int NOT NULL")]
+		public int Fag_id
+		{
+			get
+			{
+				return this._Fag_id;
+			}
+			set
+			{
+				if ((this._Fag_id != value))
+				{
+					this._Fag_id = value;
+				}
 			}
 		}
 	}
