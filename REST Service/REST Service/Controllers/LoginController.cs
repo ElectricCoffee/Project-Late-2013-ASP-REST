@@ -24,11 +24,21 @@ namespace REST_Service.Controllers
             _db = new BookingSystemDataContext();
         }
 
-        public KeyValuePair<string, string> Get([FromUri] string username, [FromUri] string password)
+        public KeyValuePair<string, KeyValuePair<string,string>> Get([FromUri] string username, [FromUri] string password)
         {
-            BookingSystemDataContext db = new BookingSystemDataContext();
+            Bruger br = _db.Brugers.FirstOrDefault(b => b.Brugernavn == username && b.Password == password);
 
-            if (_db.Users.FirstOrDefault(b => b.Username == username && b.Password == password) != null)
+            var accessLevel = 0;
+
+            if (br != null)
+            {
+                accessLevel = 
+                    _db.Administrators.FirstOrDefault(a => a.Bruger_id == br._id) != null ? 3 :
+                    _db.Lærers.FirstOrDefault        (l => l.Bruger_id == br._id) != null ? 2 :
+                    _db.Studerendes.FirstOrDefault   (s => s.Bruger_id == br._id) != null ? 1 : 0;
+            }
+
+            if (_db.Brugers.FirstOrDefault(b => b.Brugernavn == username && b.Password == password) != null)
             {
                 var auth = new Models.Authentification(username, password);
                 _authRepo.Add(auth);
@@ -36,10 +46,11 @@ namespace REST_Service.Controllers
                 Debug.WriteLine(string.Format(
                     "User logged in with credentials \"{0}\" and \"{1}\" at {2}", auth.Username, auth.Password, DateTime.Now));
 
-                return new KeyValuePair<string, string>("access-token", auth.AccessToken);
+
+                return Models.AuthentificationResponse.GenerateResponse(auth.AccessToken, accessLevel);
             }
             else
-                return new KeyValuePair<string, string>("error", "invalid credentials supplied");
+                return Models.AuthentificationResponse.GenerateResponse("", 0);
         }
     }
 }

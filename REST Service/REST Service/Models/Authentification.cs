@@ -20,13 +20,28 @@ namespace REST_Service.Models
         public string AccessToken { get; private set; }
     }
 
-    public class AuthentificationResponse
+    public static class AuthentificationResponse
     {
-        public string AccessToken { get; set ; }
-
-        public AuthentificationResponse()
+        public static KeyValuePair<string, KeyValuePair<string, string>> GenerateResponse(string token, int accessLevel)
         {
-            
+            // {key: ... , value: {key: ..., value: ...}}
+            // {key: Authentification Response, value: {key: access level, value: uid}}
+            string response, level, uid;
+
+            if(accessLevel == 0) {
+                response = "response failed";
+                level = null;
+                uid = null;
+            }
+            else {
+                response = "response succeeded";
+                level = accessLevel.ToString();
+                uid = token;
+            }
+
+            var value = new KeyValuePair<string,string>(level, uid);
+            return new KeyValuePair<string,KeyValuePair<string,string>>(response, value);
         }
+
     }
 }

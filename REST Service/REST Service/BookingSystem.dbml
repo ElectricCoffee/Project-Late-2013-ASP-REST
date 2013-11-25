@@ -1,10 +1,37 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Database1" Class="DataClassesBookingDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="LærerbookingSystem" Class="DataClassesBookingDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=92.243.227.143,1433;Initial Catalog=LærerbookingSystem;User ID=EAL;Network Library=dbmssocn" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="LærerbookingSystemConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Bruger" Member="Brugers">
     <Type Name="Bruger">
       <Column Name="[_id]" Member="_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="Brugernavn" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="Password" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="Navn_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Bruger_Lærer" Member="Lærers" ThisKey="_id" OtherKey="Bruger_id" Type="Lærer" />
+      <Association Name="Bruger_Studerende" Member="Studerendes" ThisKey="_id" OtherKey="Bruger_id" Type="Studerende" />
+      <Association Name="Bruger_Administrator" Member="Administrators" ThisKey="_id" OtherKey="Bruger_id" Type="Administrator" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Lærer" Member="Lærers">
+    <Type Name="Lærer">
+      <Column Name="[_id]" Member="_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Bruger_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Bruger_Lærer" Member="Bruger" ThisKey="Bruger_id" OtherKey="_id" Type="Bruger" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Studerende" Member="Studerendes">
+    <Type Name="Studerende">
+      <Column Name="[_id]" Member="_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Godkendt" Type="System.Byte" DbType="TinyInt NOT NULL" CanBeNull="false" />
+      <Column Name="Bruger_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Hold_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Bruger_Studerende" Member="Bruger" ThisKey="Bruger_id" OtherKey="_id" Type="Bruger" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Administrator" Member="Administrators">
+    <Type Name="Administrator">
+      <Column Name="[_id]" Member="_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Bruger_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Bruger_Administrator" Member="Bruger" ThisKey="Bruger_id" OtherKey="_id" Type="Bruger" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>
