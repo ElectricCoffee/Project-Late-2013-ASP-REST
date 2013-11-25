@@ -326,7 +326,7 @@ namespace REST_Service
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Lærer")]
-	public partial class Lærer : INotifyPropertyChanging, INotifyPropertyChanged, Models.IUser
+	public partial class Lærer : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
@@ -453,7 +453,7 @@ namespace REST_Service
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Studerende")]
-	public partial class Studerende : INotifyPropertyChanging, INotifyPropertyChanged, Models.IUser
+	public partial class Studerende : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
@@ -628,7 +628,7 @@ namespace REST_Service
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Administrator")]
-	public partial class Administrator : INotifyPropertyChanging, INotifyPropertyChanged, Models.IUser
+	public partial class Administrator : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
