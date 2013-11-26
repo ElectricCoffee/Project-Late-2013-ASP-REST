@@ -16,6 +16,7 @@
     <Type Name="Lærer">
       <Column Name="[_id]" Member="_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="Bruger_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Lærer_Fag" Member="Fags" ThisKey="_id" OtherKey="Lærer_id" Type="Fag" />
       <Association Name="Bruger_Lærer" Member="Bruger" ThisKey="Bruger_id" OtherKey="_id" Type="Bruger" IsForeignKey="true" />
     </Type>
   </Table>
@@ -25,6 +26,7 @@
       <Column Name="Godkendt" Type="System.Byte" DbType="TinyInt NOT NULL" CanBeNull="false" />
       <Column Name="Bruger_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="Hold_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Studerende_Konkret_Booking" Member="Konkret_Bookings" ThisKey="_id" OtherKey="Studerende_id" Type="Konkret_Booking" />
       <Association Name="Bruger_Studerende" Member="Bruger" ThisKey="Bruger_id" OtherKey="_id" Type="Bruger" IsForeignKey="true" />
       <Association Name="Hold_Studerende" Member="Hold" ThisKey="Hold_id" OtherKey="_id" Type="Hold" IsForeignKey="true" />
     </Type>
@@ -57,6 +59,51 @@
       <Column Name="Hold_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="Fag_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="Hold_HoldFag" Member="Hold" ThisKey="Hold_id" OtherKey="_id" Type="Hold" IsForeignKey="true" />
+      <Association Name="Fag_HoldFag" Member="Fag" ThisKey="Fag_id" OtherKey="_id" Type="Fag" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Fag" Member="Fags">
+    <Type Name="Fag">
+      <Column Name="[_id]" Member="_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Navn" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Semester_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Lærer_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Fag_HoldFag" Member="HoldFags" ThisKey="_id" OtherKey="Fag_id" Type="HoldFag" />
+      <Association Name="Fag_Booking" Member="Bookings" ThisKey="_id" OtherKey="Fag_id" Type="Booking" />
+      <Association Name="Lærer_Fag" Member="Lærer" ThisKey="Lærer_id" OtherKey="_id" Type="Lærer" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.[Mulig Booking]" Member="Mulig_Bookings">
+    <Type Name="Mulig_Booking">
+      <Column Name="[_id]" Member="_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Booking_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Mulig_Booking_Konkret_Booking" Member="Konkret_Bookings" ThisKey="_id" OtherKey="Mulig_booking_id" Type="Konkret_Booking" />
+      <Association Name="Booking_Mulig_Booking" Member="Booking" ThisKey="Booking_id" OtherKey="_id" Type="Booking" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Booking" Member="Bookings">
+    <Type Name="Booking">
+      <Column Name="[_id]" Member="_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="StartTid" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="SlutTid" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="Fag_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Booking_Mulig_Booking" Member="Mulig_Bookings" ThisKey="_id" OtherKey="Booking_id" Type="Mulig_Booking" />
+      <Association Name="Booking_Konkret_Booking" Member="Konkret_Bookings" ThisKey="_id" OtherKey="Booking_id" Type="Konkret_Booking" />
+      <Association Name="Fag_Booking" Member="Fag" ThisKey="Fag_id" OtherKey="_id" Type="Fag" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.[Konkret Booking]" Member="Konkret_Bookings">
+    <Type Name="Konkret_Booking">
+      <Column Name="[_id]" Member="_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Type" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Kommentar" Type="System.String" DbType="VarChar(150)" CanBeNull="true" />
+      <Column Name="[Status ændret]" Member="Status_ændret" Type="System.Byte" DbType="TinyInt NOT NULL" CanBeNull="false" />
+      <Column Name="Booking_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Mulig_booking_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Studerende_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Booking_Konkret_Booking" Member="Booking" ThisKey="Booking_id" OtherKey="_id" Type="Booking" IsForeignKey="true" />
+      <Association Name="Mulig_Booking_Konkret_Booking" Member="Mulig_Booking" ThisKey="Mulig_booking_id" OtherKey="_id" Type="Mulig_Booking" IsForeignKey="true" />
+      <Association Name="Studerende_Konkret_Booking" Member="Studerende" ThisKey="Studerende_id" OtherKey="_id" Type="Studerende" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

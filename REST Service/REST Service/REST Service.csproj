@@ -164,6 +164,7 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\PossibleBookingController.cs" />
     <Compile Include="Controllers\RegisterUserController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="BookingSystem.designer.cs">

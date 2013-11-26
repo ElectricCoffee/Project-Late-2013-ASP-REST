@@ -36,7 +36,7 @@ namespace REST_Service.Controllers
             Bruger br = _db.Brugers.FirstOrDefault(b => b.Brugernavn == username && b.Password == password);
 
             var accessLevel = 0;
-
+            
             if (br != null)
             {
                 // gets the access level depending on which table the user exists in

@@ -48,6 +48,18 @@ namespace REST_Service
 	partial void InsertHold(Hold instance);
 	partial void UpdateHold(Hold instance);
 	partial void DeleteHold(Hold instance);
+	partial void InsertFag(Fag instance);
+	partial void UpdateFag(Fag instance);
+	partial void DeleteFag(Fag instance);
+	partial void InsertMulig_Booking(Mulig_Booking instance);
+	partial void UpdateMulig_Booking(Mulig_Booking instance);
+	partial void DeleteMulig_Booking(Mulig_Booking instance);
+	partial void InsertBooking(Booking instance);
+	partial void UpdateBooking(Booking instance);
+	partial void DeleteBooking(Booking instance);
+	partial void InsertKonkret_Booking(Konkret_Booking instance);
+	partial void UpdateKonkret_Booking(Konkret_Booking instance);
+	partial void DeleteKonkret_Booking(Konkret_Booking instance);
 	#endregion
 		
 		public BookingSystemDataContext() : 
@@ -133,6 +145,38 @@ namespace REST_Service
 			get
 			{
 				return this.GetTable<HoldFag>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Fag> Fags
+		{
+			get
+			{
+				return this.GetTable<Fag>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Mulig_Booking> Mulig_Bookings
+		{
+			get
+			{
+				return this.GetTable<Mulig_Booking>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Booking> Bookings
+		{
+			get
+			{
+				return this.GetTable<Booking>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Konkret_Booking> Konkret_Bookings
+		{
+			get
+			{
+				return this.GetTable<Konkret_Booking>();
 			}
 		}
 	}
@@ -406,6 +450,8 @@ namespace REST_Service
 		
 		private int _Bruger_id;
 		
+		private EntitySet<Fag> _Fags;
+		
 		private EntityRef<Bruger> _Bruger;
 		
 	#region Extensibility Method Definitions
@@ -420,6 +466,7 @@ namespace REST_Service
 		
 		public Lærer()
 		{
+			this._Fags = new EntitySet<Fag>(new Action<Fag>(this.attach_Fags), new Action<Fag>(this.detach_Fags));
 			this._Bruger = default(EntityRef<Bruger>);
 			OnCreated();
 		}
@@ -465,6 +512,19 @@ namespace REST_Service
 					this.SendPropertyChanged("Bruger_id");
 					this.OnBruger_idChanged();
 				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Lærer_Fag", Storage="_Fags", ThisKey="_id", OtherKey="Lærer_id")]
+		public EntitySet<Fag> Fags
+		{
+			get
+			{
+				return this._Fags;
+			}
+			set
+			{
+				this._Fags.Assign(value);
 			}
 		}
 		
@@ -521,6 +581,18 @@ namespace REST_Service
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
+		
+		private void attach_Fags(Fag entity)
+		{
+			this.SendPropertyChanging();
+			entity.Lærer = this;
+		}
+		
+		private void detach_Fags(Fag entity)
+		{
+			this.SendPropertyChanging();
+			entity.Lærer = null;
+		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Studerende")]
@@ -536,6 +608,8 @@ namespace REST_Service
 		private int _Bruger_id;
 		
 		private int _Hold_id;
+		
+		private EntitySet<Konkret_Booking> _Konkret_Bookings;
 		
 		private EntityRef<Bruger> _Bruger;
 		
@@ -557,6 +631,7 @@ namespace REST_Service
 		
 		public Studerende()
 		{
+			this._Konkret_Bookings = new EntitySet<Konkret_Booking>(new Action<Konkret_Booking>(this.attach_Konkret_Bookings), new Action<Konkret_Booking>(this.detach_Konkret_Bookings));
 			this._Bruger = default(EntityRef<Bruger>);
 			this._Hold = default(EntityRef<Hold>);
 			OnCreated();
@@ -650,6 +725,19 @@ namespace REST_Service
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Studerende_Konkret_Booking", Storage="_Konkret_Bookings", ThisKey="_id", OtherKey="Studerende_id")]
+		public EntitySet<Konkret_Booking> Konkret_Bookings
+		{
+			get
+			{
+				return this._Konkret_Bookings;
+			}
+			set
+			{
+				this._Konkret_Bookings.Assign(value);
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Bruger_Studerende", Storage="_Bruger", ThisKey="Bruger_id", OtherKey="_id", IsForeignKey=true)]
 		public Bruger Bruger
 		{
@@ -736,6 +824,18 @@ namespace REST_Service
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+		
+		private void attach_Konkret_Bookings(Konkret_Booking entity)
+		{
+			this.SendPropertyChanging();
+			entity.Studerende = this;
+		}
+		
+		private void detach_Konkret_Bookings(Konkret_Booking entity)
+		{
+			this.SendPropertyChanging();
+			entity.Studerende = null;
 		}
 	}
 	
@@ -1159,6 +1259,924 @@ namespace REST_Service
 				{
 					this._Fag_id = value;
 				}
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Fag")]
+	public partial class Fag : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int @__id;
+		
+		private string _Navn;
+		
+		private int _Semester_id;
+		
+		private int _Lærer_id;
+		
+		private EntitySet<Booking> _Bookings;
+		
+		private EntityRef<Lærer> _Lærer;
+		
+	#region Extensibility Method Definitions
+	partial void OnLoaded();
+	partial void OnValidate(System.Data.Linq.ChangeAction action);
+	partial void OnCreated();
+	partial void On_idChanging(int value);
+	partial void On_idChanged();
+	partial void OnNavnChanging(string value);
+	partial void OnNavnChanged();
+	partial void OnSemester_idChanging(int value);
+	partial void OnSemester_idChanged();
+	partial void OnLærer_idChanging(int value);
+	partial void OnLærer_idChanged();
+	#endregion
+		
+		public Fag()
+		{
+			this._Bookings = new EntitySet<Booking>(new Action<Booking>(this.attach_Bookings), new Action<Booking>(this.detach_Bookings));
+			this._Lærer = default(EntityRef<Lærer>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[_id]", Storage="__id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int _id
+		{
+			get
+			{
+				return this.@__id;
+			}
+			set
+			{
+				if ((this.@__id != value))
+				{
+					this.On_idChanging(value);
+					this.SendPropertyChanging();
+					this.@__id = value;
+					this.SendPropertyChanged("_id");
+					this.On_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Navn", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string Navn
+		{
+			get
+			{
+				return this._Navn;
+			}
+			set
+			{
+				if ((this._Navn != value))
+				{
+					this.OnNavnChanging(value);
+					this.SendPropertyChanging();
+					this._Navn = value;
+					this.SendPropertyChanged("Navn");
+					this.OnNavnChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Semester_id", DbType="Int NOT NULL")]
+		public int Semester_id
+		{
+			get
+			{
+				return this._Semester_id;
+			}
+			set
+			{
+				if ((this._Semester_id != value))
+				{
+					this.OnSemester_idChanging(value);
+					this.SendPropertyChanging();
+					this._Semester_id = value;
+					this.SendPropertyChanged("Semester_id");
+					this.OnSemester_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Lærer_id", DbType="Int NOT NULL")]
+		public int Lærer_id
+		{
+			get
+			{
+				return this._Lærer_id;
+			}
+			set
+			{
+				if ((this._Lærer_id != value))
+				{
+					if (this._Lærer.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnLærer_idChanging(value);
+					this.SendPropertyChanging();
+					this._Lærer_id = value;
+					this.SendPropertyChanged("Lærer_id");
+					this.OnLærer_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Fag_Booking", Storage="_Bookings", ThisKey="_id", OtherKey="Fag_id")]
+		public EntitySet<Booking> Bookings
+		{
+			get
+			{
+				return this._Bookings;
+			}
+			set
+			{
+				this._Bookings.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Lærer_Fag", Storage="_Lærer", ThisKey="Lærer_id", OtherKey="_id", IsForeignKey=true)]
+		public Lærer Lærer
+		{
+			get
+			{
+				return this._Lærer.Entity;
+			}
+			set
+			{
+				Lærer previousValue = this._Lærer.Entity;
+				if (((previousValue != value) 
+							|| (this._Lærer.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Lærer.Entity = null;
+						previousValue.Fags.Remove(this);
+					}
+					this._Lærer.Entity = value;
+					if ((value != null))
+					{
+						value.Fags.Add(this);
+						this._Lærer_id = value._id;
+					}
+					else
+					{
+						this._Lærer_id = default(int);
+					}
+					this.SendPropertyChanged("Lærer");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Bookings(Booking entity)
+		{
+			this.SendPropertyChanging();
+			entity.Fag = this;
+		}
+		
+		private void detach_Bookings(Booking entity)
+		{
+			this.SendPropertyChanging();
+			entity.Fag = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.[Mulig Booking]")]
+	public partial class Mulig_Booking : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int @__id;
+		
+		private int _Booking_id;
+		
+		private EntitySet<Konkret_Booking> _Konkret_Bookings;
+		
+		private EntityRef<Booking> _Booking;
+		
+	#region Extensibility Method Definitions
+	partial void OnLoaded();
+	partial void OnValidate(System.Data.Linq.ChangeAction action);
+	partial void OnCreated();
+	partial void On_idChanging(int value);
+	partial void On_idChanged();
+	partial void OnBooking_idChanging(int value);
+	partial void OnBooking_idChanged();
+	#endregion
+		
+		public Mulig_Booking()
+		{
+			this._Konkret_Bookings = new EntitySet<Konkret_Booking>(new Action<Konkret_Booking>(this.attach_Konkret_Bookings), new Action<Konkret_Booking>(this.detach_Konkret_Bookings));
+			this._Booking = default(EntityRef<Booking>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[_id]", Storage="__id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int _id
+		{
+			get
+			{
+				return this.@__id;
+			}
+			set
+			{
+				if ((this.@__id != value))
+				{
+					this.On_idChanging(value);
+					this.SendPropertyChanging();
+					this.@__id = value;
+					this.SendPropertyChanged("_id");
+					this.On_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Booking_id", DbType="Int NOT NULL")]
+		public int Booking_id
+		{
+			get
+			{
+				return this._Booking_id;
+			}
+			set
+			{
+				if ((this._Booking_id != value))
+				{
+					if (this._Booking.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnBooking_idChanging(value);
+					this.SendPropertyChanging();
+					this._Booking_id = value;
+					this.SendPropertyChanged("Booking_id");
+					this.OnBooking_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Mulig_Booking_Konkret_Booking", Storage="_Konkret_Bookings", ThisKey="_id", OtherKey="Mulig_booking_id")]
+		public EntitySet<Konkret_Booking> Konkret_Bookings
+		{
+			get
+			{
+				return this._Konkret_Bookings;
+			}
+			set
+			{
+				this._Konkret_Bookings.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Booking_Mulig_Booking", Storage="_Booking", ThisKey="Booking_id", OtherKey="_id", IsForeignKey=true)]
+		public Booking Booking
+		{
+			get
+			{
+				return this._Booking.Entity;
+			}
+			set
+			{
+				Booking previousValue = this._Booking.Entity;
+				if (((previousValue != value) 
+							|| (this._Booking.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Booking.Entity = null;
+						previousValue.Mulig_Bookings.Remove(this);
+					}
+					this._Booking.Entity = value;
+					if ((value != null))
+					{
+						value.Mulig_Bookings.Add(this);
+						this._Booking_id = value._id;
+					}
+					else
+					{
+						this._Booking_id = default(int);
+					}
+					this.SendPropertyChanged("Booking");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Konkret_Bookings(Konkret_Booking entity)
+		{
+			this.SendPropertyChanging();
+			entity.Mulig_Booking = this;
+		}
+		
+		private void detach_Konkret_Bookings(Konkret_Booking entity)
+		{
+			this.SendPropertyChanging();
+			entity.Mulig_Booking = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Booking")]
+	public partial class Booking : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int @__id;
+		
+		private System.DateTime _StartTid;
+		
+		private System.DateTime _SlutTid;
+		
+		private int _Fag_id;
+		
+		private EntitySet<Mulig_Booking> _Mulig_Bookings;
+		
+		private EntitySet<Konkret_Booking> _Konkret_Bookings;
+		
+		private EntityRef<Fag> _Fag;
+		
+	#region Extensibility Method Definitions
+	partial void OnLoaded();
+	partial void OnValidate(System.Data.Linq.ChangeAction action);
+	partial void OnCreated();
+	partial void On_idChanging(int value);
+	partial void On_idChanged();
+	partial void OnStartTidChanging(System.DateTime value);
+	partial void OnStartTidChanged();
+	partial void OnSlutTidChanging(System.DateTime value);
+	partial void OnSlutTidChanged();
+	partial void OnFag_idChanging(int value);
+	partial void OnFag_idChanged();
+	#endregion
+		
+		public Booking()
+		{
+			this._Mulig_Bookings = new EntitySet<Mulig_Booking>(new Action<Mulig_Booking>(this.attach_Mulig_Bookings), new Action<Mulig_Booking>(this.detach_Mulig_Bookings));
+			this._Konkret_Bookings = new EntitySet<Konkret_Booking>(new Action<Konkret_Booking>(this.attach_Konkret_Bookings), new Action<Konkret_Booking>(this.detach_Konkret_Bookings));
+			this._Fag = default(EntityRef<Fag>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[_id]", Storage="__id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int _id
+		{
+			get
+			{
+				return this.@__id;
+			}
+			set
+			{
+				if ((this.@__id != value))
+				{
+					this.On_idChanging(value);
+					this.SendPropertyChanging();
+					this.@__id = value;
+					this.SendPropertyChanged("_id");
+					this.On_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_StartTid", DbType="DateTime NOT NULL")]
+		public System.DateTime StartTid
+		{
+			get
+			{
+				return this._StartTid;
+			}
+			set
+			{
+				if ((this._StartTid != value))
+				{
+					this.OnStartTidChanging(value);
+					this.SendPropertyChanging();
+					this._StartTid = value;
+					this.SendPropertyChanged("StartTid");
+					this.OnStartTidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SlutTid", DbType="DateTime NOT NULL")]
+		public System.DateTime SlutTid
+		{
+			get
+			{
+				return this._SlutTid;
+			}
+			set
+			{
+				if ((this._SlutTid != value))
+				{
+					this.OnSlutTidChanging(value);
+					this.SendPropertyChanging();
+					this._SlutTid = value;
+					this.SendPropertyChanged("SlutTid");
+					this.OnSlutTidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Fag_id", DbType="Int NOT NULL")]
+		public int Fag_id
+		{
+			get
+			{
+				return this._Fag_id;
+			}
+			set
+			{
+				if ((this._Fag_id != value))
+				{
+					if (this._Fag.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnFag_idChanging(value);
+					this.SendPropertyChanging();
+					this._Fag_id = value;
+					this.SendPropertyChanged("Fag_id");
+					this.OnFag_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Booking_Mulig_Booking", Storage="_Mulig_Bookings", ThisKey="_id", OtherKey="Booking_id")]
+		public EntitySet<Mulig_Booking> Mulig_Bookings
+		{
+			get
+			{
+				return this._Mulig_Bookings;
+			}
+			set
+			{
+				this._Mulig_Bookings.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Booking_Konkret_Booking", Storage="_Konkret_Bookings", ThisKey="_id", OtherKey="Booking_id")]
+		public EntitySet<Konkret_Booking> Konkret_Bookings
+		{
+			get
+			{
+				return this._Konkret_Bookings;
+			}
+			set
+			{
+				this._Konkret_Bookings.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Fag_Booking", Storage="_Fag", ThisKey="Fag_id", OtherKey="_id", IsForeignKey=true)]
+		public Fag Fag
+		{
+			get
+			{
+				return this._Fag.Entity;
+			}
+			set
+			{
+				Fag previousValue = this._Fag.Entity;
+				if (((previousValue != value) 
+							|| (this._Fag.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Fag.Entity = null;
+						previousValue.Bookings.Remove(this);
+					}
+					this._Fag.Entity = value;
+					if ((value != null))
+					{
+						value.Bookings.Add(this);
+						this._Fag_id = value._id;
+					}
+					else
+					{
+						this._Fag_id = default(int);
+					}
+					this.SendPropertyChanged("Fag");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Mulig_Bookings(Mulig_Booking entity)
+		{
+			this.SendPropertyChanging();
+			entity.Booking = this;
+		}
+		
+		private void detach_Mulig_Bookings(Mulig_Booking entity)
+		{
+			this.SendPropertyChanging();
+			entity.Booking = null;
+		}
+		
+		private void attach_Konkret_Bookings(Konkret_Booking entity)
+		{
+			this.SendPropertyChanging();
+			entity.Booking = this;
+		}
+		
+		private void detach_Konkret_Bookings(Konkret_Booking entity)
+		{
+			this.SendPropertyChanging();
+			entity.Booking = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.[Konkret Booking]")]
+	public partial class Konkret_Booking : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int @__id;
+		
+		private int _Type;
+		
+		private string _Kommentar;
+		
+		private byte _Status_ændret;
+		
+		private int _Booking_id;
+		
+		private int _Mulig_booking_id;
+		
+		private int _Studerende_id;
+		
+		private EntityRef<Booking> _Booking;
+		
+		private EntityRef<Mulig_Booking> _Mulig_Booking;
+		
+		private EntityRef<Studerende> _Studerende;
+		
+	#region Extensibility Method Definitions
+	partial void OnLoaded();
+	partial void OnValidate(System.Data.Linq.ChangeAction action);
+	partial void OnCreated();
+	partial void On_idChanging(int value);
+	partial void On_idChanged();
+	partial void OnTypeChanging(int value);
+	partial void OnTypeChanged();
+	partial void OnKommentarChanging(string value);
+	partial void OnKommentarChanged();
+	partial void OnStatus_ændretChanging(byte value);
+	partial void OnStatus_ændretChanged();
+	partial void OnBooking_idChanging(int value);
+	partial void OnBooking_idChanged();
+	partial void OnMulig_booking_idChanging(int value);
+	partial void OnMulig_booking_idChanged();
+	partial void OnStuderende_idChanging(int value);
+	partial void OnStuderende_idChanged();
+	#endregion
+		
+		public Konkret_Booking()
+		{
+			this._Booking = default(EntityRef<Booking>);
+			this._Mulig_Booking = default(EntityRef<Mulig_Booking>);
+			this._Studerende = default(EntityRef<Studerende>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[_id]", Storage="__id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int _id
+		{
+			get
+			{
+				return this.@__id;
+			}
+			set
+			{
+				if ((this.@__id != value))
+				{
+					this.On_idChanging(value);
+					this.SendPropertyChanging();
+					this.@__id = value;
+					this.SendPropertyChanged("_id");
+					this.On_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Type", DbType="Int NOT NULL")]
+		public int Type
+		{
+			get
+			{
+				return this._Type;
+			}
+			set
+			{
+				if ((this._Type != value))
+				{
+					this.OnTypeChanging(value);
+					this.SendPropertyChanging();
+					this._Type = value;
+					this.SendPropertyChanged("Type");
+					this.OnTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Kommentar", DbType="VarChar(150)")]
+		public string Kommentar
+		{
+			get
+			{
+				return this._Kommentar;
+			}
+			set
+			{
+				if ((this._Kommentar != value))
+				{
+					this.OnKommentarChanging(value);
+					this.SendPropertyChanging();
+					this._Kommentar = value;
+					this.SendPropertyChanged("Kommentar");
+					this.OnKommentarChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[Status ændret]", Storage="_Status_ændret", DbType="TinyInt NOT NULL")]
+		public byte Status_ændret
+		{
+			get
+			{
+				return this._Status_ændret;
+			}
+			set
+			{
+				if ((this._Status_ændret != value))
+				{
+					this.OnStatus_ændretChanging(value);
+					this.SendPropertyChanging();
+					this._Status_ændret = value;
+					this.SendPropertyChanged("Status_ændret");
+					this.OnStatus_ændretChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Booking_id", DbType="Int NOT NULL")]
+		public int Booking_id
+		{
+			get
+			{
+				return this._Booking_id;
+			}
+			set
+			{
+				if ((this._Booking_id != value))
+				{
+					if (this._Booking.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnBooking_idChanging(value);
+					this.SendPropertyChanging();
+					this._Booking_id = value;
+					this.SendPropertyChanged("Booking_id");
+					this.OnBooking_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Mulig_booking_id", DbType="Int NOT NULL")]
+		public int Mulig_booking_id
+		{
+			get
+			{
+				return this._Mulig_booking_id;
+			}
+			set
+			{
+				if ((this._Mulig_booking_id != value))
+				{
+					if (this._Mulig_Booking.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnMulig_booking_idChanging(value);
+					this.SendPropertyChanging();
+					this._Mulig_booking_id = value;
+					this.SendPropertyChanged("Mulig_booking_id");
+					this.OnMulig_booking_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Studerende_id", DbType="Int NOT NULL")]
+		public int Studerende_id
+		{
+			get
+			{
+				return this._Studerende_id;
+			}
+			set
+			{
+				if ((this._Studerende_id != value))
+				{
+					if (this._Studerende.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnStuderende_idChanging(value);
+					this.SendPropertyChanging();
+					this._Studerende_id = value;
+					this.SendPropertyChanged("Studerende_id");
+					this.OnStuderende_idChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Booking_Konkret_Booking", Storage="_Booking", ThisKey="Booking_id", OtherKey="_id", IsForeignKey=true)]
+		public Booking Booking
+		{
+			get
+			{
+				return this._Booking.Entity;
+			}
+			set
+			{
+				Booking previousValue = this._Booking.Entity;
+				if (((previousValue != value) 
+							|| (this._Booking.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Booking.Entity = null;
+						previousValue.Konkret_Bookings.Remove(this);
+					}
+					this._Booking.Entity = value;
+					if ((value != null))
+					{
+						value.Konkret_Bookings.Add(this);
+						this._Booking_id = value._id;
+					}
+					else
+					{
+						this._Booking_id = default(int);
+					}
+					this.SendPropertyChanged("Booking");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Mulig_Booking_Konkret_Booking", Storage="_Mulig_Booking", ThisKey="Mulig_booking_id", OtherKey="_id", IsForeignKey=true)]
+		public Mulig_Booking Mulig_Booking
+		{
+			get
+			{
+				return this._Mulig_Booking.Entity;
+			}
+			set
+			{
+				Mulig_Booking previousValue = this._Mulig_Booking.Entity;
+				if (((previousValue != value) 
+							|| (this._Mulig_Booking.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Mulig_Booking.Entity = null;
+						previousValue.Konkret_Bookings.Remove(this);
+					}
+					this._Mulig_Booking.Entity = value;
+					if ((value != null))
+					{
+						value.Konkret_Bookings.Add(this);
+						this._Mulig_booking_id = value._id;
+					}
+					else
+					{
+						this._Mulig_booking_id = default(int);
+					}
+					this.SendPropertyChanged("Mulig_Booking");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Studerende_Konkret_Booking", Storage="_Studerende", ThisKey="Studerende_id", OtherKey="_id", IsForeignKey=true)]
+		public Studerende Studerende
+		{
+			get
+			{
+				return this._Studerende.Entity;
+			}
+			set
+			{
+				Studerende previousValue = this._Studerende.Entity;
+				if (((previousValue != value) 
+							|| (this._Studerende.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Studerende.Entity = null;
+						previousValue.Konkret_Bookings.Remove(this);
+					}
+					this._Studerende.Entity = value;
+					if ((value != null))
+					{
+						value.Konkret_Bookings.Add(this);
+						this._Studerende_id = value._id;
+					}
+					else
+					{
+						this._Studerende_id = default(int);
+					}
+					this.SendPropertyChanged("Studerende");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
 	}
