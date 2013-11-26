@@ -23,32 +23,32 @@ namespace REST_Service
 	
 	
 	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="LærerbookingSystem")]
-    public partial class BookingSystemDataContext : System.Data.Linq.DataContext
+	public partial class BookingSystemDataContext : System.Data.Linq.DataContext
 	{
 		
 		private static System.Data.Linq.Mapping.MappingSource mappingSource = new AttributeMappingSource();
 		
-    #region Extensibility Method Definitions
-    partial void OnCreated();
-    partial void InsertBruger(Bruger instance);
-    partial void UpdateBruger(Bruger instance);
-    partial void DeleteBruger(Bruger instance);
-    partial void InsertLærer(Lærer instance);
-    partial void UpdateLærer(Lærer instance);
-    partial void DeleteLærer(Lærer instance);
-    partial void InsertStuderende(Studerende instance);
-    partial void UpdateStuderende(Studerende instance);
-    partial void DeleteStuderende(Studerende instance);
-    partial void InsertAdministrator(Administrator instance);
-    partial void UpdateAdministrator(Administrator instance);
-    partial void DeleteAdministrator(Administrator instance);
-    partial void InsertNavn(Navn instance);
-    partial void UpdateNavn(Navn instance);
-    partial void DeleteNavn(Navn instance);
-    partial void InsertHold(Hold instance);
-    partial void UpdateHold(Hold instance);
-    partial void DeleteHold(Hold instance);
-    #endregion
+	#region Extensibility Method Definitions
+	partial void OnCreated();
+	partial void InsertBruger(Bruger instance);
+	partial void UpdateBruger(Bruger instance);
+	partial void DeleteBruger(Bruger instance);
+	partial void InsertLærer(Lærer instance);
+	partial void UpdateLærer(Lærer instance);
+	partial void DeleteLærer(Lærer instance);
+	partial void InsertStuderende(Studerende instance);
+	partial void UpdateStuderende(Studerende instance);
+	partial void DeleteStuderende(Studerende instance);
+	partial void InsertAdministrator(Administrator instance);
+	partial void UpdateAdministrator(Administrator instance);
+	partial void DeleteAdministrator(Administrator instance);
+	partial void InsertNavn(Navn instance);
+	partial void UpdateNavn(Navn instance);
+	partial void DeleteNavn(Navn instance);
+	partial void InsertHold(Hold instance);
+	partial void UpdateHold(Hold instance);
+	partial void DeleteHold(Hold instance);
+	#endregion
 		
 		public BookingSystemDataContext() : 
 				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["LærerbookingSystemConnectionString"].ConnectionString, mappingSource)
@@ -159,19 +159,19 @@ namespace REST_Service
 		
 		private EntityRef<Navn> _Navn;
 		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void On_idChanging(int value);
-    partial void On_idChanged();
-    partial void OnBrugernavnChanging(string value);
-    partial void OnBrugernavnChanged();
-    partial void OnPasswordChanging(string value);
-    partial void OnPasswordChanged();
-    partial void OnNavn_idChanging(int value);
-    partial void OnNavn_idChanged();
-    #endregion
+	#region Extensibility Method Definitions
+	partial void OnLoaded();
+	partial void OnValidate(System.Data.Linq.ChangeAction action);
+	partial void OnCreated();
+	partial void On_idChanging(int value);
+	partial void On_idChanged();
+	partial void OnBrugernavnChanging(string value);
+	partial void OnBrugernavnChanged();
+	partial void OnPasswordChanging(string value);
+	partial void OnPasswordChanged();
+	partial void OnNavn_idChanging(int value);
+	partial void OnNavn_idChanged();
+	#endregion
 		
 		public Bruger()
 		{
@@ -408,15 +408,15 @@ namespace REST_Service
 		
 		private EntityRef<Bruger> _Bruger;
 		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void On_idChanging(int value);
-    partial void On_idChanged();
-    partial void OnBruger_idChanging(int value);
-    partial void OnBruger_idChanged();
-    #endregion
+	#region Extensibility Method Definitions
+	partial void OnLoaded();
+	partial void OnValidate(System.Data.Linq.ChangeAction action);
+	partial void OnCreated();
+	partial void On_idChanging(int value);
+	partial void On_idChanged();
+	partial void OnBruger_idChanging(int value);
+	partial void OnBruger_idChanged();
+	#endregion
 		
 		public Lærer()
 		{
@@ -541,19 +541,19 @@ namespace REST_Service
 		
 		private EntityRef<Hold> _Hold;
 		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void On_idChanging(int value);
-    partial void On_idChanged();
-    partial void OnGodkendtChanging(byte value);
-    partial void OnGodkendtChanged();
-    partial void OnBruger_idChanging(int value);
-    partial void OnBruger_idChanged();
-    partial void OnHold_idChanging(int value);
-    partial void OnHold_idChanged();
-    #endregion
+	#region Extensibility Method Definitions
+	partial void OnLoaded();
+	partial void OnValidate(System.Data.Linq.ChangeAction action);
+	partial void OnCreated();
+	partial void On_idChanging(int value);
+	partial void On_idChanged();
+	partial void OnGodkendtChanging(byte value);
+	partial void OnGodkendtChanged();
+	partial void OnBruger_idChanging(int value);
+	partial void OnBruger_idChanged();
+	partial void OnHold_idChanging(int value);
+	partial void OnHold_idChanged();
+	#endregion
 		
 		public Studerende()
 		{
@@ -751,15 +751,15 @@ namespace REST_Service
 		
 		private EntityRef<Bruger> _Bruger;
 		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void On_idChanging(int value);
-    partial void On_idChanged();
-    partial void OnBruger_idChanging(int value);
-    partial void OnBruger_idChanged();
-    #endregion
+	#region Extensibility Method Definitions
+	partial void OnLoaded();
+	partial void OnValidate(System.Data.Linq.ChangeAction action);
+	partial void OnCreated();
+	partial void On_idChanging(int value);
+	partial void On_idChanged();
+	partial void OnBruger_idChanging(int value);
+	partial void OnBruger_idChanged();
+	#endregion
 		
 		public Administrator()
 		{
@@ -880,17 +880,17 @@ namespace REST_Service
 		
 		private EntitySet<Bruger> _Brugers;
 		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void On_idChanging(int value);
-    partial void On_idChanged();
-    partial void OnFornavnChanging(string value);
-    partial void OnFornavnChanged();
-    partial void OnEfternavnChanging(string value);
-    partial void OnEfternavnChanged();
-    #endregion
+	#region Extensibility Method Definitions
+	partial void OnLoaded();
+	partial void OnValidate(System.Data.Linq.ChangeAction action);
+	partial void OnCreated();
+	partial void On_idChanging(int value);
+	partial void On_idChanged();
+	partial void OnFornavnChanging(string value);
+	partial void OnFornavnChanged();
+	partial void OnEfternavnChanging(string value);
+	partial void OnEfternavnChanged();
+	#endregion
 		
 		public Navn()
 		{
@@ -1016,15 +1016,15 @@ namespace REST_Service
 		
 		private EntitySet<Studerende> _Studerendes;
 		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void On_idChanging(int value);
-    partial void On_idChanged();
-    partial void OnNavnChanging(string value);
-    partial void OnNavnChanged();
-    #endregion
+	#region Extensibility Method Definitions
+	partial void OnLoaded();
+	partial void OnValidate(System.Data.Linq.ChangeAction action);
+	partial void OnCreated();
+	partial void On_idChanging(int value);
+	partial void On_idChanged();
+	partial void OnNavnChanging(string value);
+	partial void OnNavnChanged();
+	#endregion
 		
 		public Hold()
 		{
