@@ -58,26 +58,26 @@ namespace REST_Service.Controllers
             // checks if cls exits in table 
             if (cls != null)
             {
-                classId = cls._id;
-            
-                submitChanges(_db);
-                Debug.WriteLine("Homeroom name: " + homeroomClass);
-                Debug.WriteLine("Finished searching through holds, number of errors: " + numberOfErrors);
-
-                Navn name = new Navn
-                {
-                    Fornavn = firstname,
-                    Efternavn = lastname
-                };
-
-                _db.Navns.InsertOnSubmit(name);
-
-                submitChanges(_db);
-                Debug.WriteLine("Finished adding a name, number of errors: " + numberOfErrors);
-                
                 // checks if it is an eal mail and if it exists in the database
                 if (email.Contains("@edu.eal.dk") && _db.Brugers.FirstOrDefault(b => b.Brugernavn == email) == null)
                 {
+                    classId = cls._id;
+            
+                    submitChanges(_db);
+                    Debug.WriteLine("Homeroom name: " + homeroomClass);
+                    Debug.WriteLine("Finished searching through holds, number of errors: " + numberOfErrors);
+
+                    Navn name = new Navn
+                    {
+                        Fornavn = firstname,
+                        Efternavn = lastname
+                    };
+
+                    _db.Navns.InsertOnSubmit(name);
+                
+                    submitChanges(_db);
+                    Debug.WriteLine("Finished adding a name, number of errors: " + numberOfErrors);
+
                     Bruger user = new Bruger
                     {
                         Navn_id = name._id,
