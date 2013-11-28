@@ -9,19 +9,19 @@ namespace REST_Service.Repositories
 {
     public class UserRepository : IRepository<Models.User>
     {
-        private BookingSystemDataContext _dataContext;
+        private DataLayer.ManualBookingSystemDataContext _dataContext;
         private Table<Models.Name> _nameTable;
         private Table<Models.User> _userTable;
         private Table<Models.Student> _studentTable;
         // private Table<Models.Teacher> _teacherTable;
         // private Table<Models.Administrator> _administratorTable;
         
-        public UserRepository(BookingSystemDataContext dataContext)
+        public UserRepository(DataLayer.ManualBookingSystemDataContext dataContext)
         {
             _dataContext = dataContext;
-            _nameTable = dataContext.GetTable<Models.Name>();
-            _userTable = dataContext.GetTable<Models.User>();
-            _studentTable = dataContext.GetTable<Models.Student>();
+            _nameTable = dataContext.Names;
+            _userTable = dataContext.Users;
+            // _studentTable = dataContext.Students;
             // _teacherTable = dataContext.GetTable<Models.Teacher>();
             // _administratorTable = dataContext.GetTable<Models.Administrator>();
         }
@@ -29,9 +29,9 @@ namespace REST_Service.Repositories
         public void InsertOnSubmit(Models.User user)
         {
             _nameTable.InsertOnSubmit(user.Name);
-            _dataContext.SubmitChanges();
+            // _dataContext.SubmitChanges();
 
-            user.Name = user.Name; // fill in the foreign key
+            // user.Name = user.Name; // fill in the foreign key
 
             _userTable.InsertOnSubmit(user);
         }

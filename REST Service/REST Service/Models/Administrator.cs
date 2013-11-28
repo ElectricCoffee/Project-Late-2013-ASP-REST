@@ -7,11 +7,10 @@ using System.Web;
 
 namespace REST_Service.Models
 {
-    [Table(Name = "dbo.Studerende")]
-    public class Student : IModel
+    [Table(Name = "dbo.Administrator")]
+    public class Administrator : IModel
     {
         private EntityRef<User> _user;
-        private EntityRef<HomeRoomClass> _homeRoomClass;
 
         [Column(
             Name = "_id",
@@ -33,8 +32,12 @@ namespace REST_Service.Models
             }
         }
 
-        public string Username {
-            get { return _user.Entity.Username; }
+        public string Username
+        {
+            get
+            {
+                return _user.Entity.Username;
+            }
             set
             {
                 if (_user.Entity == null)
@@ -45,52 +48,16 @@ namespace REST_Service.Models
 
         public string Password
         {
-            get { return _user.Entity.Password; }
+            get
+            {
+                return _user.Entity.Password;
+            }
             set
             {
                 if (_user.Entity == null)
                     _user.Entity = new User();
                 _user.Entity.Password = value;
             }
-        }
-
-        [Column(
-            Name = "Godkendt",
-            DbType = "TINYINT NOT NULL",
-            CanBeNull = false)]
-        private byte ApprovedNum { get; set; }
-
-        public bool Approved
-        {
-            get
-            {
-                if (ApprovedNum == 1)
-                    return true;
-                else
-                    return false;
-            }
-            set {
-                if (value)
-                    ApprovedNum = 1;
-                else
-                    ApprovedNum = 0;
-            }
-        }
-
-        [Column(
-            Name = "Hold_id",
-            DbType = "INT NOT NULL",
-            CanBeNull = false)]
-        private int HomeRoomClassId { get; set; }
-
-        [Association(
-            IsForeignKey = true,
-            Name = "FK_Studerende_Hold",
-            ThisKey = "HomeRoomClassId")]
-        public HomeRoomClass HomeRoomClass
-        {
-            get { return _homeRoomClass.Entity; }
-            set { _homeRoomClass.Entity = value; }
         }
 
         [Column(
@@ -101,7 +68,7 @@ namespace REST_Service.Models
 
         [Association(
             IsForeignKey = true,
-            Name = "FK_Studerende_Bruger",
+            Name = "FK_Administrator_Bruger",
             ThisKey = "UserId")]
         private User User
         {

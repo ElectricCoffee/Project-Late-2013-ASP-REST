@@ -9,12 +9,12 @@ namespace REST_Service.Repositories
 {
     public class StudentRepository : IRepository<Models.Student>
     {
-        private BookingSystemDataContext _dataContext;
+        private DataLayer.ManualBookingSystemDataContext _dataContext;
         private Table<Models.Name> _nameTable;
         private Table<Models.User> _userTable;
         private Table<Models.Student> _studentTable;
         
-        public StudentRepository(BookingSystemDataContext dataContext)
+        public StudentRepository(DataLayer.ManualBookingSystemDataContext dataContext)
         {
             _dataContext = dataContext;
             _nameTable = dataContext.GetTable<Models.Name>();
@@ -24,27 +24,6 @@ namespace REST_Service.Repositories
 
         public void InsertOnSubmit(Models.Student student)
         {
-            var name = new Models.Name
-            {
-                FirstName = student.Name.FirstName,
-                LastName = student.Name.LastName
-            };
-
-            _nameTable.InsertOnSubmit(name);
-            _dataContext.SubmitChanges();
-
-            var user = new Models.User
-            {
-                Username = student.UserName,
-                Password = student.Password,
-                Name = name
-            };
-
-            _userTable.InsertOnSubmit(user);
-            _dataContext.SubmitChanges();
-
-            student.UserId = user.Id;
-
             _studentTable.InsertOnSubmit(student);
         }
 

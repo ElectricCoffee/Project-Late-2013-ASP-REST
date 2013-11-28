@@ -22,7 +22,7 @@ namespace REST_Service_Unit_Test
             base.Initialize();
 
             _context.Users.Attach(
-                new Rest.User
+                new Rest.Models.User
                 {
                     Username = "johndoe",
                     Password = "12345678"

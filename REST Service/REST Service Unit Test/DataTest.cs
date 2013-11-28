@@ -20,7 +20,7 @@ namespace REST_Service_Unit_Test
     {
         protected TransactionScope _transactionScope;
         protected string _connectionString;
-        protected BookingSystemDataContext _context;
+        protected REST_Service.DataLayer.ManualBookingSystemDataContext _context;
 
         /// <summary>
         /// Prepares a test database
@@ -45,8 +45,9 @@ namespace REST_Service_Unit_Test
         /// </summary>
         public void EnsureDataExists()
         {
-            _context = new BookingSystemDataContext(_connectionString);
+            _context = new REST_Service.DataLayer.ManualBookingSystemDataContext(_connectionString);
 
+            /*
             // attempting to hunt down the error source
             Debug.WriteLine(_context.Mapping.DatabaseName);
             foreach (var invalidChar in System.IO.Path.GetInvalidPathChars())
@@ -56,6 +57,7 @@ namespace REST_Service_Unit_Test
 
             if (!_context.DatabaseExists())
                 _context.CreateDatabase();
+             */
 
             _transactionScope = new TransactionScope(TransactionScopeOption.RequiresNew);
         }
