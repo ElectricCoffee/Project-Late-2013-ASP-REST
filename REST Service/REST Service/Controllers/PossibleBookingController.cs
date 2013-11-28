@@ -6,19 +6,18 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using REST_Service.Utils;
 
 namespace REST_Service.Controllers
 {
     public class PossibleBookingController : ApiController
     {
+        private const string DATE_FORMAT = "yyyy-MM-dd-HH-mm-ss";
         private string _connectionString = ConfigurationManager.ConnectionStrings["DummyConnection"].ConnectionString;
         private BookingSystemDataContext _db;
         private int _numberOfErrors = 0;
 
-        private string
-            _subject = "",
-            _startDate = "",
-            _endDate = "";
+        private Models.PossibleBookingMessage _bookingModel = null;
 
         /// <summary>
         /// Creates a new instance of the Data Context to use locally
@@ -47,13 +46,11 @@ namespace REST_Service.Controllers
         /// <param name="startDate"></param>
         /// <param name="endDate"></param>
         /// <param name="inputSubject"></param>
-        public void Post([FromUri]string startDate, [FromUri]string endDate, [FromUri]string inputSubject)
+        [HttpPost]
+        public void Post([FromBody]string json)
         {
-            // set the private fields to contain the data from our input parameters
-            _startDate = startDate;
-            _endDate = endDate;
-            _subject = inputSubject;
-
+            _bookingModel = json.DeserializeJson<Models.PossibleBookingMessage>();
+            
             // Takes care of the try-catch boilerplate by wrapping it in an action
             Action<BookingSystemDataContext> submitChanges = db =>
             {
@@ -67,48 +64,13 @@ namespace REST_Service.Controllers
                     Debug.WriteLine("DEBUG: " + e.Message);
                 }
             };
-
-            // splits the date strings into string arrays
-            string[] 
-                splitStart = _startDate.Split('-'), 
-                splitEnd = _endDate.Split('-');
-
-            // specifies int arrays of the size 6, to be filled with date data
-            int[] 
-                startArray = new int[6], 
-                endArray = new int[6];
-
-            // if the lengths don't match, increment the number of errors
-            if (splitStart.Length < 6 && splitEnd.Length < 6) 
-                _numberOfErrors++;
-
-            // fill the integer arrays with the string data, and catch any errors
-            try
-            {
-                for (int i = 0; i < splitStart.Length; i++)
-                {
-                    startArray[i] = Convert.ToInt32(splitStart[i]);
-                    endArray[i] = Convert.ToInt32(splitEnd[i]);
-                }
-            }
-            catch (ArgumentOutOfRangeException aoore)
-            {
-                Debug.WriteLine("DEBUG: " + aoore);
-                _numberOfErrors++;
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine("DEBUG: " + e);
-                _numberOfErrors++;
-            }
-
             // creates DateTimes based on the data in the int arrays
-            DateTime 
-                start = new DateTime(startArray[0], startArray[1], startArray[2], startArray[3], startArray[4], startArray[5]),
-                end = new DateTime(endArray[0], endArray[1], endArray[2], endArray[3], endArray[4], endArray[5]);
+            DateTime
+                start = _bookingModel.StartDate,
+                end = _bookingModel.EndTime;
 
             // gets the subject from the database
-            var subject = _db.Fags.SingleOrDefault(f => f.Navn.Equals(_subject));
+            var subject = _db.Fags.SingleOrDefault(f => f.Navn.Equals(_bookingModel.Subject));
 
             // if the subject isn't null, and the number of errors is 0, then
             if (subject != null && _numberOfErrors == 0)
@@ -140,18 +102,21 @@ namespace REST_Service.Controllers
                 submitChanges(_db);
             }
         }
-
         /// <summary>
         /// Gets the start and end date as well as the subject from the databse and wraps it neatly into a JSON object
         /// If, however there are errors, it'll return a JSON object containing the error code
         /// </summary>
         /// <returns></returns>
-        public KeyValuePair<string, KeyValuePair<string, string>> Get()
+        [HttpGet]
+        public HttpResponseMessage Get()
         {
-            if (_numberOfErrors != 0)
-                return Response("Error", "N/A", "N/A");
-            else
-                return Response(_subject, _startDate, _endDate);
+            var response = new HttpResponseMessage();
+
+            var message = new Models.PossibleBookingMessages(_db.Bookings, _db.Mulig_Bookings);
+
+            response.OK(message.SerializeToJsonObject());
+
+            return response;
         }
     }
 }
