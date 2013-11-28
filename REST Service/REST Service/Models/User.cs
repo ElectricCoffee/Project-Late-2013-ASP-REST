@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Linq;
 using System.Data.Linq.Mapping;
 using System.Linq;
 using System.Web;
@@ -17,9 +18,10 @@ namespace REST_Service.Models
     /// Linq to Sql mapping for the table Bruger
     /// </summary>
     [Table(Name = "dbo.Bruger")]
-    public class User
+    public class User : IModel
     {
-        private Name _name;
+        // private Name _name;
+        private EntityRef<Models.Name> _name;
 
         [Column(
             Name = "_id",
@@ -42,28 +44,20 @@ namespace REST_Service.Models
             CanBeNull = false)]
         public string Password { get; set; }
 
-        public Name Name
-        {
-            get { return _name; }
-            set
-            {
-                NameId = Name.Id;
-                Name = value;
-            }
-        }
-
         [Column(
-            Name = "_id",
+            Name = "Navn_id",
             DbType = "INT NOT NULL",
-            AutoSync = AutoSync.OnInsert,
-            CanBeNull = false,
-            IsPrimaryKey = true,
-            IsDbGenerated = true)]
+            CanBeNull = false)]
+        private int NameId { get; set; }
+
         [Association(
             IsForeignKey = true,
             Name = "Bruger_Navn",
-            ThisKey = "Navn_id",
-            OtherKey = "_id")]
-        private int NameId { get; set; }
+            ThisKey = "NameId")]
+        public Name Name
+        {
+            get { return _name.Entity; }
+            set { _name.Entity = value; }
+        }
     }
 }

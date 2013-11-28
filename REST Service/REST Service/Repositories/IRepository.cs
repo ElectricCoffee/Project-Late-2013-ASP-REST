@@ -6,7 +6,7 @@ using System.Web;
 
 namespace REST_Service.Repositories
 {
-    public interface IRepository<TModel>
+    public interface IRepository<TModel> where TModel : Models.IModel
     {
         void InsertOnSubmit(TModel entity);
         void DeleteOnSubmit(TModel entity);

@@ -173,10 +173,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>BookingSystem.dbml</DependentUpon>
     </Compile>
+    <Compile Include="DataLayer\ManualBookingSystemDataContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Authentification.cs" />
+    <Compile Include="Models\HomeRoomClass.cs" />
+    <Compile Include="Models\IModel.cs" />
     <Compile Include="Models\Name.cs" />
     <Compile Include="Models\PossibleBookingMessage.cs" />
     <Compile Include="Models\Student.cs" />
@@ -190,7 +193,6 @@
     <Compile Include="Utils\JsonConverter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\Database1.sdf" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -322,7 +324,9 @@
       <DependentUpon>BookingSystem.dbml</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
