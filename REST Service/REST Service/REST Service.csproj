@@ -179,7 +179,6 @@
     </Compile>
     <Compile Include="Models\Administrator.cs" />
     <Compile Include="Models\Authentification.cs" />
-    <Compile Include="Models\HomeRoomClass.cs" />
     <Compile Include="Models\Booking.cs" />
     <Compile Include="Models\HomeRoomClass.cs" />
     <Compile Include="Models\HomeRoomSubject.cs" />

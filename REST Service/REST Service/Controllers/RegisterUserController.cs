@@ -58,24 +58,25 @@ namespace REST_Service.Controllers
             };
 
             var classId = 0;
-            var cls = _db.Holds.FirstOrDefault(h => h.Navn == homeroomClass);
+            var cls = _db.Holds.FirstOrDefault(h => h.Navn.Equals(student.HomeRoomClass.Name));
 
             // checks if cls exits in table 
             if (cls != null)
             {
                 // checks if it is an eal mail and if it exists in the database
-                if (email.Contains("@edu.eal.dk") && _db.Brugers.FirstOrDefault(b => b.Brugernavn == email) == null)
+                if (student.Username.Contains("@edu.eal.dk") && _db.Brugers.FirstOrDefault(b => b.Brugernavn.Equals(student.Username)) == null)
                 {
                     classId = cls._id;
-            
+                    student.Username.Replace("@edu.eal.dk", ""); // remove the ending
+
                     submitChanges(_db);
-                    Debug.WriteLine("Homeroom name: " + homeroomClass);
+                    Debug.WriteLine("Homeroom name: " + student.HomeRoomClass.Name);
                     Debug.WriteLine("Finished searching through holds, number of errors: " + numberOfErrors);
 
                     Navn name = new Navn
                     {
-                        Fornavn = firstname,
-                        Efternavn = lastname
+                        Fornavn = student.Name.FirstName,
+                        Efternavn = student.Name.LastName
                     };
 
                     _db.Navns.InsertOnSubmit(name);
@@ -86,8 +87,8 @@ namespace REST_Service.Controllers
                     Bruger user = new Bruger
                     {
                         Navn_id = name._id,
-                        Brugernavn = email,
-                        Password = password
+                        Brugernavn = student.Username,
+                        Password = student.Password
                     };
 
                     _db.Brugers.InsertOnSubmit(user);

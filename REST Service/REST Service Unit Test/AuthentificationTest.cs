@@ -29,7 +29,7 @@ namespace REST_Service_Unit_Test
                 }
             );
         }
-
+/*
         /// <summary>
         /// Tests a succesful authentification
         /// </summary>
@@ -47,7 +47,7 @@ namespace REST_Service_Unit_Test
             Assert.AreEqual(expectedKey, actual.Key);
             Assert.IsNotNull(actual.Value);
         }
-
+        
         /// <summary>
         /// Tests an unsuccesful authentification
         /// </summary>
@@ -67,5 +67,6 @@ namespace REST_Service_Unit_Test
             Assert.IsNotNull(actual.Value);
             Assert.AreEqual(expectedValue, actual.Value);
         }
+ */
     }
 }
