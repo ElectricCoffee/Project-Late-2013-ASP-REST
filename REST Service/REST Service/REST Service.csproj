@@ -177,17 +177,27 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Administrator.cs" />
     <Compile Include="Models\Authentification.cs" />
     <Compile Include="Models\HomeRoomClass.cs" />
+    <Compile Include="Models\Booking.cs" />
+    <Compile Include="Models\HomeRoomClass.cs" />
+    <Compile Include="Models\HomeRoomSubject.cs" />
     <Compile Include="Models\IModel.cs" />
     <Compile Include="Models\Name.cs" />
+    <Compile Include="Models\PossibleBooking.cs" />
     <Compile Include="Models\PossibleBookingMessage.cs" />
+    <Compile Include="Models\Semester.cs" />
     <Compile Include="Models\Student.cs" />
+    <Compile Include="Models\Subject.cs" />
+    <Compile Include="Models\Teacher.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\AdministratorRepository.cs" />
     <Compile Include="Repositories\AuthentificationRepository.cs" />
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\StudentRepository.cs" />
+    <Compile Include="Repositories\TeacherRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Utils\HttpResponse.cs" />
     <Compile Include="Utils\JsonConverter.cs" />
