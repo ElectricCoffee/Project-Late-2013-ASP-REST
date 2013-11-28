@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using REST_Service.Utils;
 
 namespace REST_Service.Controllers
 {
@@ -31,10 +32,14 @@ namespace REST_Service.Controllers
         /// <param name="password">Specifies the user's password</param>
         /// <param name="homeroomClass">Specifies the user's homeroom class</param>
         /// <returns>JSON Object with either an OK or an Error</returns>
-        public KeyValuePair<string, KeyValuePair<string, string>> Get(
-            [FromUri] string firstname, [FromUri] string lastname, [FromUri] string email, [FromUri] string password, [FromUri] string homeroomClass)
+        [HttpPost]
+        public HttpResponseMessage Post(
+            //[FromUri] string firstname, [FromUri] string lastname, [FromUri] string email, [FromUri] string password, [FromUri] string homeroomClass)
+            [FromBody]string json)
         {
             var numberOfErrors = 0;
+
+            var student = json.DeserializeJson<Models.Student>();
 
             Func<string, KeyValuePair<string, KeyValuePair<string, string>>> response = str => 
                 new KeyValuePair<string, KeyValuePair<string, string>>(str, new KeyValuePair<string,string>(null,null));
@@ -110,10 +115,13 @@ namespace REST_Service.Controllers
                 numberOfErrors++;
                 Debug.WriteLine("DEBUG: Couldn't find the specified homeroom");
             }
+            var message = new HttpResponseMessage();
 
             if (numberOfErrors != 0)
-                return response("Errors: " + numberOfErrors);
-            else return response("OK");
+                message.Forbidden("Errors: " + numberOfErrors);
+            else message.OK("{\"Response\":\"OK\"}");
+
+            return message;
         }
     }
 }
