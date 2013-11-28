@@ -2,22 +2,35 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Script.Serialization;
 
 namespace REST_Service.Models
 {
-    public class Authentification
+    public enum AccessLevel
     {
-        public Authentification(string username, string password)
+        Error = 0,
+        Student = 1,
+        Teacher = 2,
+        Administrator = 3
+    }
+
+    public class Authentification
+    {  
+        public Authentification(string username, string password, AccessLevel level)
         {
             Username = username;
             Password = password;
+            this.AccessLevel = level;
             var guid = Guid.NewGuid();
             AccessToken = Convert.ToBase64String(guid.ToByteArray());
         }
 
+        [ScriptIgnore]
         public string Username { get; set; }
+        [ScriptIgnore]
         public string Password { get; set; }
         public string AccessToken { get; private set; }
+        public AccessLevel AccessLevel { get; set; } 
     }
 
     public static class AuthentificationResponse
