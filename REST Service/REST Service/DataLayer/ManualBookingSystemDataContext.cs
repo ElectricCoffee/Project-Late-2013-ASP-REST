@@ -28,5 +28,50 @@ namespace REST_Service.DataLayer
         {
             get { return GetTable<Models.Student>(); }
         }
+
+        public Table<Models.Teacher> Teachers
+        {
+            get { return GetTable<Models.Teacher>(); }
+        }
+
+        public Table<Models.Administrator> Administrators
+        {
+            get { return GetTable<Models.Administrator>(); }
+        }
+
+        public Table<Models.Subject> Subjects
+        {
+            get { return GetTable<Models.Subject>(); }
+        }
+
+        public Table<Models.HomeRoomClass> HomeRoomClasses
+        {
+            get { return GetTable<Models.HomeRoomClass>(); }
+        }
+
+        public Table<Models.Semester> Semesters
+        {
+            get { return GetTable<Models.Semester>(); }
+        }
+
+        public Table<Models.HomeRoomSubject> HomeRoomSubjects
+        {
+            get { return GetTable<Models.HomeRoomSubject>(); }
+        }
+
+        public Table<Models.Booking> Bookings
+        {
+            get { return GetTable<Models.Booking>(); }
+        }
+
+        public Table<Models.ConcreteBooking> ConcreteBookings
+        {
+            get { return GetTable<Models.ConcreteBooking>(); }
+        }
+
+        public Table<Models.PossibleBooking> PossibleBookings
+        {
+            get { return GetTable<Models.PossibleBooking>(); }
+        }
     }
 }

@@ -22,8 +22,8 @@ namespace REST_Service.Repositories
             _nameTable = dataContext.Names;
             _userTable = dataContext.Users;
             _studentTable = dataContext.Students;
-            _teacherTable = dataContext.GetTable<Models.Teacher>();
-            _administratorTable = dataContext.GetTable<Models.Administrator>();
+            _teacherTable = dataContext.Teachers;
+            _administratorTable = dataContext.Administrators;
         }
 
         public void InsertOnSubmit(Models.User user)
