@@ -10,16 +10,16 @@ using REST_Service.Utils;
 
 namespace REST_Service.Controllers
 {
-    public class RegisterUserController : ApiController
+    public class RegisterStudentController : ApiController
     {
         private string _connectionString = ConfigurationManager.ConnectionStrings["DummyConnection"].ConnectionString;
         private BookingSystemDataContext _db;
         
-        public RegisterUserController(BookingSystemDataContext context)
+        public RegisterStudentController(BookingSystemDataContext context)
         {
             _db = context;
         }
-        public RegisterUserController()
+        public RegisterStudentController()
         {
             _db = new BookingSystemDataContext(_connectionString);
         }
@@ -34,15 +34,14 @@ namespace REST_Service.Controllers
         /// <returns>JSON Object with either an OK or an Error</returns>
         [HttpPost]
         public HttpResponseMessage Post(
-            //[FromUri] string firstname, [FromUri] string lastname, [FromUri] string email, [FromUri] string password, [FromUri] string homeroomClass)
-            [FromBody]string json)
+            //[FromUri] string firstname, [FromUri] string lastname, [FromUri] string Username, [FromUri] string password, [FromUri] string homeroomClass)
+            [FromBody]Models.Student student)
         {
             var numberOfErrors = 0;
 
-            var student = json.DeserializeJson<Models.Student>();
+            //var json = jsonBytes.ConvertToString();
 
-            Func<string, KeyValuePair<string, KeyValuePair<string, string>>> response = str => 
-                new KeyValuePair<string, KeyValuePair<string, string>>(str, new KeyValuePair<string,string>(null,null));
+            //var student = json.DeserializeJson<Models.Student>();
 
             Action<BookingSystemDataContext> submitChanges = db =>
             {

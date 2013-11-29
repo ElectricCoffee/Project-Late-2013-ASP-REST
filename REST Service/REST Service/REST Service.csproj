@@ -166,7 +166,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\PossibleBookingController.cs" />
-    <Compile Include="Controllers\RegisterUserController.cs" />
+    <Compile Include="Controllers\RegisterStudentController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="BookingSystem.designer.cs">
       <AutoGen>True</AutoGen>
@@ -198,6 +198,7 @@
     <Compile Include="Repositories\StudentRepository.cs" />
     <Compile Include="Repositories\TeacherRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
+    <Compile Include="Utils\ClientCommunicator.cs" />
     <Compile Include="Utils\HttpResponse.cs" />
     <Compile Include="Utils\JsonConverter.cs" />
   </ItemGroup>

@@ -93,8 +93,8 @@ namespace REST_Service.Models
 
         private void EnsureHomeRoomSubjectExists()
         {
-            if (_homeRoomSubject.Equals(null))
-                _homeRoomSubject = new EntityRef<HomeRoomSubject>();
+            if (HomeRoomSubject == null)
+                HomeRoomSubject = new HomeRoomSubject();
         }
     }
 }
