@@ -49,7 +49,7 @@ namespace REST_Service.Models
             }
         }
 
-        public EntityRef<Subject> Subject
+        private EntityRef<Subject> SubjectRef
         {
             get
             {
@@ -61,6 +61,12 @@ namespace REST_Service.Models
                 EnsureBookingExists();
                 _booking.Entity.Subject = value;
             }
+        }
+
+        public Subject Subject
+        {
+            get { return SubjectRef.Entity; }
+            set { SubjectRef = new EntityRef<Subject>(value); }
         }
 
         [Column(
