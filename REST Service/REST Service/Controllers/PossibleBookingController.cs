@@ -36,10 +36,6 @@ namespace REST_Service.Controllers
             _db = db;
         }
 
-        public KeyValuePair<string, KeyValuePair<string, string>> Response(string pSubject, string pStart, string pEnd){
-            return new KeyValuePair<string, KeyValuePair<string, string>>(pSubject, new KeyValuePair<string, string>(pStart, pEnd));
-        }
-
         /// <summary>
         /// Posts the creation of the "Mulig Booking" to the server, with all related fields.
         /// </summary>
@@ -111,10 +107,9 @@ namespace REST_Service.Controllers
         public HttpResponseMessage Get()
         {
             var response = new HttpResponseMessage();
+            var bookings = _db.GetTable<Models.PossibleBooking>();
 
-            var message = new Models.PossibleBookingMessages(_db.Bookings, _db.Mulig_Bookings);
-
-            response.OK(message.SerializeToJsonObject());
+            response.OK(bookings.SerializeToJsonObject());
 
             return response;
         }

@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Data.Linq;
 using System.Data.Linq.Mapping;
 using System.Linq;
 using System.Web;
+using System.Web.Script.Serialization;
 
 namespace REST_Service.Models
 {
@@ -48,20 +50,26 @@ namespace REST_Service.Models
             set { _homeRoomSubject.Entity = value; }
         }
 
+        [JsonIgnore]
+        [ScriptIgnore]
         public EntitySet<Subject> Subjects
         {
             get
             {
-                if (_homeRoomSubject.Equals(null))
-                    _homeRoomSubject = new EntityRef<HomeRoomSubject>();
+                EnsureHomeRoomSubjectExists();
                 return HomeRoomSubject.Subjects;
             }
             set
             {
-                if (_homeRoomSubject.Equals(null))
-                    _homeRoomSubject = new EntityRef<HomeRoomSubject>();
+                EnsureHomeRoomSubjectExists();
                 HomeRoomSubject.Subjects = value;
             }
+        }
+
+        private void EnsureHomeRoomSubjectExists()
+        {
+            if (HomeRoomSubject == null)
+                HomeRoomSubject = new HomeRoomSubject();
         }
     }
 }

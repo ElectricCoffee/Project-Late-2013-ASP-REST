@@ -10,16 +10,16 @@ using REST_Service.Utils;
 
 namespace REST_Service.Controllers
 {
-    public class RegisterUserController : ApiController
+    public class RegisterStudentController : ApiController
     {
         private string _connectionString = ConfigurationManager.ConnectionStrings["DummyConnection"].ConnectionString;
         private BookingSystemDataContext _db;
         
-        public RegisterUserController(BookingSystemDataContext context)
+        public RegisterStudentController(BookingSystemDataContext context)
         {
             _db = context;
         }
-        public RegisterUserController()
+        public RegisterStudentController()
         {
             _db = new BookingSystemDataContext(_connectionString);
         }
@@ -34,15 +34,14 @@ namespace REST_Service.Controllers
         /// <returns>JSON Object with either an OK or an Error</returns>
         [HttpPost]
         public HttpResponseMessage Post(
-            //[FromUri] string firstname, [FromUri] string lastname, [FromUri] string email, [FromUri] string password, [FromUri] string homeroomClass)
-            [FromBody]string json)
+            //[FromUri] string firstname, [FromUri] string lastname, [FromUri] string Username, [FromUri] string password, [FromUri] string homeroomClass)
+            [FromBody]Models.Student student)
         {
             var numberOfErrors = 0;
 
-            var student = json.DeserializeJson<Models.Student>();
+            //var json = jsonBytes.ConvertToString();
 
-            Func<string, KeyValuePair<string, KeyValuePair<string, string>>> response = str => 
-                new KeyValuePair<string, KeyValuePair<string, string>>(str, new KeyValuePair<string,string>(null,null));
+            //var student = json.DeserializeJson<Models.Student>();
 
             Action<BookingSystemDataContext> submitChanges = db =>
             {
@@ -58,24 +57,25 @@ namespace REST_Service.Controllers
             };
 
             var classId = 0;
-            var cls = _db.Holds.FirstOrDefault(h => h.Navn == homeroomClass);
+            var cls = _db.Holds.FirstOrDefault(h => h.Navn.Equals(student.HomeRoomClass.Name));
 
             // checks if cls exits in table 
             if (cls != null)
             {
                 // checks if it is an eal mail and if it exists in the database
-                if (email.Contains("@edu.eal.dk") && _db.Brugers.FirstOrDefault(b => b.Brugernavn == email) == null)
+                if (student.Username.Contains("@edu.eal.dk") && _db.Brugers.FirstOrDefault(b => b.Brugernavn.Equals(student.Username)) == null)
                 {
                     classId = cls._id;
-            
+                    student.Username.Replace("@edu.eal.dk", ""); // remove the ending
+
                     submitChanges(_db);
-                    Debug.WriteLine("Homeroom name: " + homeroomClass);
+                    Debug.WriteLine("Homeroom name: " + student.HomeRoomClass.Name);
                     Debug.WriteLine("Finished searching through holds, number of errors: " + numberOfErrors);
 
                     Navn name = new Navn
                     {
-                        Fornavn = firstname,
-                        Efternavn = lastname
+                        Fornavn = student.Name.FirstName,
+                        Efternavn = student.Name.LastName
                     };
 
                     _db.Navns.InsertOnSubmit(name);
@@ -86,8 +86,8 @@ namespace REST_Service.Controllers
                     Bruger user = new Bruger
                     {
                         Navn_id = name._id,
-                        Brugernavn = email,
-                        Password = password
+                        Brugernavn = student.Username,
+                        Password = student.Password
                     };
 
                     _db.Brugers.InsertOnSubmit(user);

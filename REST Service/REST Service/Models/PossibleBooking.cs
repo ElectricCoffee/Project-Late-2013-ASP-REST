@@ -7,8 +7,8 @@ using System.Web;
 
 namespace REST_Service.Models
 {
-    [Table(Name = "dbo.MuligBooking")]
-    public class PossibleBooking : IModel
+    [Table(Name = "[Mulig Booking]")]
+    public class PossibleBooking
     {
         private EntityRef<Booking> _booking;
 
@@ -93,8 +93,8 @@ namespace REST_Service.Models
 
         private void EnsureBookingExists()
         {
-            if (_booking.Equals(null))
-                _booking = new EntityRef<Booking>(new Booking());
+            if (Booking == null)
+                Booking = new Booking();
         }
     }
 }

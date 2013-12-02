@@ -9,7 +9,7 @@ namespace REST_Service.Models
     {
         public List<PossibleBookingMessage> Messages { get; set; }
 
-        public PossibleBookingMessages(System.Data.Linq.Table<Booking> bookings, System.Data.Linq.Table<Mulig_Booking> possibleBookings)
+        public PossibleBookingMessages(System.Data.Linq.Table<REST_Service.Booking> bookings, System.Data.Linq.Table<REST_Service.Mulig_Booking> possibleBookings)
         {
             Messages = new List<PossibleBookingMessage>();
             var bs = bookings.ToList();
@@ -23,7 +23,7 @@ namespace REST_Service.Models
     }
     public class PossibleBookingMessage
     {
-        public PossibleBookingMessage(Booking booking, Mulig_Booking possible)
+        public PossibleBookingMessage(REST_Service.Booking booking, Mulig_Booking possible)
         {
             if (possible.Booking_id == booking._id)
             {
