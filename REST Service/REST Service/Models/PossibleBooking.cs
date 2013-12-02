@@ -27,7 +27,11 @@ namespace REST_Service.Models
             CanBeNull = false)]
         public string Comment { get; set; }
 
-        public byte StatusChanged
+        [Column(
+            Name = "[Status Ændret]",
+            DbType = "TINYINT NOT NULL",
+            CanBeNull = false)]
+        public byte StatusChanged { get; set; }
 
         public DateTime StartTime
         {

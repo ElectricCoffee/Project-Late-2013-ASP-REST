@@ -15,7 +15,7 @@ namespace REST_Service.Models
 
     public class ConcreteBooking : IModel
     {
-        private EntityRef<PossibleBooking> _possibleBooking;
+        private EntitySet<PossibleBooking> _possibleBooking;
         private EntityRef<Booking> _booking;
 
         [Column(
@@ -127,10 +127,10 @@ namespace REST_Service.Models
             IsForeignKey = true,
             Name = "[FK_Konkret Booking_Mulig Booking]",
             ThisKey = "PossibleBookingId")]
-        private PossibleBooking PossibleBooking
+        private EntitySet<PossibleBooking> PossibleBooking
         {
-            get { return _possibleBooking.Entity; }
-            set { _possibleBooking.Entity = value; }
+            get { return _possibleBooking; }
+            set { _possibleBooking = value; }
         }
 
         [Column(
