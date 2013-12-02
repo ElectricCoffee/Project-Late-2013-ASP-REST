@@ -43,9 +43,8 @@ namespace REST_Service.Controllers
         /// <param name="endDate"></param>
         /// <param name="inputSubject"></param>
         [HttpPost]
-        public void Post([FromBody]string json)
+        public void Post([FromBody]Models.PossibleBooking possibleBooking)
         {
-            _bookingModel = json.DeserializeJson<Models.PossibleBookingMessage>();
             
             // Takes care of the try-catch boilerplate by wrapping it in an action
             Action<BookingSystemDataContext> submitChanges = db =>
@@ -56,48 +55,23 @@ namespace REST_Service.Controllers
                 }
                 catch (Exception e)
                 {
-                    _numberOfErrors++;
                     Debug.WriteLine("DEBUG: " + e.Message);
                 }
             };
-            // creates DateTimes based on the data in the int arrays
-            DateTime
-                start = _bookingModel.StartDate,
-                end = _bookingModel.EndTime;
 
             // gets the subject from the database
-            var subject = _db.Fags.SingleOrDefault(f => f.Navn.Equals(_bookingModel.Subject));
+            var subject = _db.GetTable<Models.Subject>().SingleOrDefault(s => s.Name == possibleBooking.Subject.Name);
 
-            // if the subject isn't null, and the number of errors is 0, then
-            if (subject != null && _numberOfErrors == 0)
-            {
-                // create a new booking
-                Booking booking = new Booking
-                {
-                    StartTid = start,
-                    SlutTid = end,
-                    Fag_id = subject._id
-                };
+            if (subject != null)
+                possibleBooking.Subject = subject;
 
-                // write it to the database
-                _db.Bookings.InsertOnSubmit(booking);
+            // write it to the database
+            _db.GetTable<Models.PossibleBooking>().InsertOnSubmit(possibleBooking);
 
-                // commit the changes to the database
-                submitChanges(_db);
-
-                // create a new possible booking
-                Mulig_Booking possible = new Mulig_Booking
-                {
-                    Booking_id = booking._id
-                };
-
-                // write it to the database
-                _db.Mulig_Bookings.InsertOnSubmit(possible);
-
-                // commit changes to the database
-                submitChanges(_db);
-            }
+            // commit changes to the database
+            submitChanges(_db);
         }
+
         /// <summary>
         /// Gets the start and end date as well as the subject from the databse and wraps it neatly into a JSON object
         /// If, however there are errors, it'll return a JSON object containing the error code

@@ -28,17 +28,17 @@ namespace REST_Service.Models
             if (possible.Booking_id == booking._id)
             {
                 Id = possible._id;
-                PossibleId = possible.Booking_id;
+                BookingId = possible.Booking_id;
                 Subject = new InnerSubject { Id = booking.Fag._id, Name = booking.Fag.Navn };
-                StartDate = booking.StartTid;
+                StartTime = booking.StartTid;
                 EndTime = booking.SlutTid;
             }
         }
 
         public int Id { get; set; }
-        public int PossibleId { get; set; }
+        public int BookingId { get; set; }
         public InnerSubject Subject { get; set; }
-        public DateTime StartDate { get; set; }
+        public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
 
         public class InnerSubject
