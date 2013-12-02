@@ -21,18 +21,6 @@ namespace REST_Service.Models
             IsDbGenerated = true)]
         public int Id { get; private set; }
 
-        [Column(
-            Name = "Kommentar",
-            DbType = "VARCHAR(150) NOT NULL",
-            CanBeNull = false)]
-        public string Comment { get; set; }
-
-        [Column(
-            Name = "[Status Ændret]",
-            DbType = "TINYINT NOT NULL",
-            CanBeNull = false)]
-        public byte StatusChanged { get; set; }
-
         public DateTime StartTime
         {
             get

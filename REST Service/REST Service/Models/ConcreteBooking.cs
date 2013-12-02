@@ -55,13 +55,13 @@ namespace REST_Service.Models
             Name = "[Status ændret]",
             DbType = "TINYINT NOT NULL",
             CanBeNull = false)]
-        private byte ApprovedNum { get; set; }
+        private byte StatusChangedNum { get; set; }
 
-        public bool Approved
+        public bool StatusChanged
         {
             get
             {
-                if (ApprovedNum == 1)
+                if (StatusChangedNum == 1)
                     return true;
                 else
                     return false;
@@ -69,9 +69,9 @@ namespace REST_Service.Models
             set
             {
                 if (value)
-                    ApprovedNum = 1;
+                    StatusChangedNum = 1;
                 else
-                    ApprovedNum = 0;
+                    StatusChangedNum = 0;
             }
         }
 
