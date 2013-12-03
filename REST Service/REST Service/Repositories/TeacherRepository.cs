@@ -17,29 +17,29 @@ namespace REST_Service.Repositories
         public TeacherRepository(DataLayer.ManualBookingSystemDataContext dataContext)
         {
             _dataContext = dataContext;
-            _nameTable = dataContext.GetTable<Models.Name>();
-            _userTable = dataContext.GetTable<Models.User>();
-            _teacherTable = dataContext.GetTable<Models.Teacher>();
+            _nameTable = dataContext.Names;
+            _userTable = dataContext.Users;
+            _teacherTable = dataContext.Teachers;
         }
 
-        public void InsertOnSubmit(Models.Teacher administrator)
+        public void InsertOnSubmit(Models.Teacher teacher)
         {
-            _teacherTable.InsertOnSubmit(administrator);
+            _teacherTable.InsertOnSubmit(teacher);
         }
 
-        public void DeleteOnSubmit(Models.Teacher administrator)
+        public void DeleteOnSubmit(Models.Teacher teacher)
         {
-            _teacherTable.Attach(administrator);
-            _teacherTable.DeleteOnSubmit(administrator);
+            _teacherTable.Attach(teacher);
+            _teacherTable.DeleteOnSubmit(teacher);
 
-            var user = _userTable.SingleOrDefault(u => u.Id == administrator.UserId);
+            var user = _userTable.SingleOrDefault(u => u.Id == teacher.UserId);
 
             _userTable.Attach(user);
             _userTable.DeleteOnSubmit(user);
 
-            if (_nameTable.Count(n => n == administrator.Name) == 1)
+            if (_nameTable.Count(n => n == teacher.Name) == 1)
             {
-                var name = _nameTable.SingleOrDefault(n => n == administrator.Name);
+                var name = _nameTable.SingleOrDefault(n => n == teacher.Name);
                 _nameTable.Attach(name);
                 _nameTable.DeleteOnSubmit(name);
             }

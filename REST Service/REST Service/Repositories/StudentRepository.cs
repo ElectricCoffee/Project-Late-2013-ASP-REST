@@ -17,9 +17,9 @@ namespace REST_Service.Repositories
         public StudentRepository(DataLayer.ManualBookingSystemDataContext dataContext)
         {
             _dataContext = dataContext;
-            _nameTable = dataContext.GetTable<Models.Name>();
-            _userTable = dataContext.GetTable<Models.User>();
-            _studentTable = dataContext.GetTable<Models.Student>();
+            _nameTable = dataContext.Names;
+            _userTable = dataContext.Users;
+            _studentTable = dataContext.Students;
         }
 
         public void InsertOnSubmit(Models.Student student)

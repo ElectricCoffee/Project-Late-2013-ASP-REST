@@ -13,27 +13,24 @@ namespace REST_Service.Repositories
         private Table<Models.Name> _nameTable;
         private Table<Models.User> _userTable;
         private Table<Models.Student> _studentTable;
-        // private Table<Models.Teacher> _teacherTable;
-        // private Table<Models.Administrator> _administratorTable;
+        private Table<Models.Teacher> _teacherTable;
+        private Table<Models.Administrator> _administratorTable;
         
         public UserRepository(DataLayer.ManualBookingSystemDataContext dataContext)
         {
             _dataContext = dataContext;
             _nameTable = dataContext.Names;
             _userTable = dataContext.Users;
-            // _studentTable = dataContext.Students;
-            // _teacherTable = dataContext.GetTable<Models.Teacher>();
-            // _administratorTable = dataContext.GetTable<Models.Administrator>();
+            _studentTable = dataContext.Students;
+            _teacherTable = dataContext.Teachers;
+            _administratorTable = dataContext.Administrators;
         }
 
         public void InsertOnSubmit(Models.User user)
         {
-            _nameTable.InsertOnSubmit(user.Name);
-            // _dataContext.SubmitChanges();
-
-            // user.Name = user.Name; // fill in the foreign key
-
-            _userTable.InsertOnSubmit(user);
+            throw (new MethodAccessException(
+                "Attempt to create basic Users are discouraged," +
+                "go through the specializations instead"));
         }
 
         public void DeleteOnSubmit(Models.User user)
@@ -42,13 +39,13 @@ namespace REST_Service.Repositories
             if (student != null)
                 _studentTable.DeleteOnSubmit(student);
 
-            /* var teacher = _teacherTable.SingleOrDefault(t => t.UserId == user.Id);
+            var teacher = _teacherTable.SingleOrDefault(t => t.UserId == user.Id);
             if (teacher != null)
-                _teacherTable.DeleteOnSubmit(teacher); */
+                _teacherTable.DeleteOnSubmit(teacher);
 
-            /* var administrator = _administratorTable.SingleOrDefault(a => a.UserId == user.Id);
+            var administrator = _administratorTable.SingleOrDefault(a => a.UserId == user.Id);
             if (administrator != null)
-                _administratorTable.DeleteOnSubmit(administrator); */
+                _administratorTable.DeleteOnSubmit(administrator);
 
             _userTable.Attach(user);
             _userTable.DeleteOnSubmit(user);
