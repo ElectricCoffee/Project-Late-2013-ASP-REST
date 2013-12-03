@@ -6,7 +6,7 @@ using System.Web;
 
 namespace REST_Service.Models
 {
-    [Table(Name = "dbo.Semester")]
+    [Table(Name = "Semester")]
     public class Semester : IModel
     {
         [Column(

@@ -7,11 +7,20 @@ using System.Web;
 
 namespace REST_Service.Models
 {
-    [Table(Name = "dbo.HoldFag")]
+    [Table(Name = "HoldFag")]
     public class HomeRoomSubject : IModel
     {
         private EntitySet<HomeRoomClass> _homeRoomClasses;
         private EntitySet<Subject> _subjects;
+
+        [Column(
+            Name = "_id",
+            DbType = "INT NOT NULL PRIMARY KEY IDENTITY",
+            AutoSync = AutoSync.OnInsert,
+            CanBeNull = false,
+            IsPrimaryKey = true,
+            IsDbGenerated = true)]
+        public int Id { get; private set; }
 
         [Column(
             Name = "Hold_id",
@@ -22,7 +31,8 @@ namespace REST_Service.Models
         [Association(
             IsForeignKey = true,
             Name = "HoldFag_Hold",
-            ThisKey = "HomeRoomClassId")]
+            ThisKey = "HomeRoomClassId",
+            OtherKey = "Id")]
         public EntitySet<HomeRoomClass> HomeRoomClasses
         {
             get { return _homeRoomClasses; }
@@ -38,7 +48,8 @@ namespace REST_Service.Models
         [Association(
             IsForeignKey = true,
             Name = "HoldFag_Fag",
-            ThisKey = "SubjectId")]
+            ThisKey = "SubjectId",
+            OtherKey = "Id")]
         public EntitySet<Subject> Subjects
         {
             get { return _subjects; }

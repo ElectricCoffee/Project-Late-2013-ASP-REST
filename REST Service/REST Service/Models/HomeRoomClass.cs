@@ -9,7 +9,7 @@ using System.Web.Script.Serialization;
 
 namespace REST_Service.Models
 {
-    [Table(Name = "dbo.Hold")]
+    [Table(Name = "Hold")]
     public class HomeRoomClass : IModel
     {
         EntitySet<Student> _students;
@@ -31,19 +31,22 @@ namespace REST_Service.Models
         public string Name { get; set; }
 
         [Association(
-            IsForeignKey = true,
+            IsForeignKey = false,
             Name = "FK_Studerende_Hold",
-            ThisKey = "Id")]
-        public EntitySet<Student> Student
+            ThisKey = "Id",
+            OtherKey = "HomeRoomClassId")]
+        public EntitySet<Student> Students
         {
             get { return _students; }
             set { _students = value; }
         }
 
         [Association(
-            IsForeignKey = true,
+            Storage = "_homeRoomSubject",
+            IsForeignKey = false,
             Name = "HoldFag_Hold",
-            ThisKey = "Id")]
+            ThisKey = "Id",
+            OtherKey = "HomeRoomClassId")]
         public HomeRoomSubject HomeRoomSubject
         {
             get { return _homeRoomSubject.Entity; }

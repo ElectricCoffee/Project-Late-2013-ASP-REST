@@ -7,7 +7,7 @@ using System.Web;
 
 namespace REST_Service.Models
 {
-    [Table(Name = "dbo.Fag")]
+    [Table(Name = "Fag")]
     public class Subject : IModel
     {
         private EntityRef<Semester> _semester;
@@ -36,9 +36,11 @@ namespace REST_Service.Models
         private int SemesterId { get; set; }
 
         [Association(
+            Storage = "_semester",
             IsForeignKey = true,
             Name = "Fag_Semester",
-            ThisKey = "SemesterId")]
+            ThisKey = "SemesterId",
+            OtherKey = "Id")]
         public Semester Semester
         {
             get { return _semester.Entity; }
@@ -52,9 +54,11 @@ namespace REST_Service.Models
         private int TeacherId { get; set; }
 
         [Association(
+            Storage = "_teacher",
             IsForeignKey = true,
             Name = "Fag_Lærer",
-            ThisKey = "TeacherId")]
+            ThisKey = "TeacherId",
+            OtherKey = "Id")]
         public Teacher Teacher
         {
             get { return _teacher.Entity; }
@@ -62,9 +66,10 @@ namespace REST_Service.Models
         }
 
         [Association(
-            IsForeignKey = true,
+            Storage = "_homeRoomSubject",
             Name = "HoldFag_Fag",
-            ThisKey = "Id")]
+            ThisKey = "Id",
+            OtherKey = "SubjectId")]
         public HomeRoomSubject HomeRoomSubject
         {
             get { return _homeRoomSubject.Entity; }
@@ -86,9 +91,10 @@ namespace REST_Service.Models
         }
 
         [Association(
-            IsForeignKey = true,
+            IsForeignKey = false,
             Name = "FK_Booking_Fag",
-            ThisKey = "Id")]
+            ThisKey = "Id",
+            OtherKey = "SubjectId")]
         public EntitySet<Booking> Bookings { get; set; }
 
         private void EnsureHomeRoomSubjectExists()

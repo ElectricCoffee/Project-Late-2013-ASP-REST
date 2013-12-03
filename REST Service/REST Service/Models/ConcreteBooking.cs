@@ -13,9 +13,10 @@ namespace REST_Service.Models
         Finished = 2
     }
 
+    [Table(Name = "[Konkret Booking]")]
     public class ConcreteBooking : IModel
     {
-        private EntitySet<PossibleBooking> _possibleBooking;
+        private EntityRef<PossibleBooking> _possibleBooking;
         private EntityRef<Booking> _booking;
 
         [Column(
@@ -94,26 +95,22 @@ namespace REST_Service.Models
             get
             {
                 EnsureBookingExists();
-                return _booking.Entity.EndTime;
+                return Booking.EndTime;
             }
             set
             {
                 EnsureBookingExists();
-                _booking.Entity.EndTime = value;
+                Booking.EndTime = value;
             }
         }
 
-        public EntityRef<Subject> Subject
+        public Subject Subject
         {
-            get
-            {
-                EnsureBookingExists();
-                return _booking.Entity.Subject;
-            }
+            get { return _booking.Entity.Subject; }
             set
             {
                 EnsureBookingExists();
-                _booking.Entity.Subject = value;
+                Booking.Subject = value;
             }
         }
 
@@ -124,13 +121,15 @@ namespace REST_Service.Models
         public int PossibleBookingId { get; set; }
 
         [Association(
+            Storage = "_possibleBooking",
             IsForeignKey = true,
             Name = "[FK_Konkret Booking_Mulig Booking]",
-            ThisKey = "PossibleBookingId")]
-        private EntitySet<PossibleBooking> PossibleBooking
+            ThisKey = "PossibleBookingId",
+            OtherKey = "Id")]
+        public PossibleBooking PossibleBooking
         {
-            get { return _possibleBooking; }
-            set { _possibleBooking = value; }
+            get { return _possibleBooking.Entity; }
+            set { _possibleBooking.Entity = value; }
         }
 
         [Column(
@@ -140,9 +139,11 @@ namespace REST_Service.Models
         public int BookingId { get; set; }
 
         [Association(
+            Storage = "_booking",
             IsForeignKey = true,
             Name = "[FK_Konkret Booking_Booking]",
-            ThisKey = "BookingId")]
+            ThisKey = "BookingId",
+            OtherKey = "Id")]
         private Booking Booking
         {
             get { return _booking.Entity; }
@@ -151,8 +152,8 @@ namespace REST_Service.Models
 
         private void EnsureBookingExists()
         {
-            if (_booking.Equals(null))
-                _booking = new EntityRef<Booking>(new Booking());
+            if (Booking == null)
+                Booking = new Booking();
         }
     }
 }

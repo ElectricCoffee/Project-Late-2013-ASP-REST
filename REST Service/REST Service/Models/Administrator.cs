@@ -7,7 +7,7 @@ using System.Web;
 
 namespace REST_Service.Models
 {
-    [Table(Name = "dbo.Administrator")]
+    [Table(Name = "Administrator")]
     public class Administrator : IModel
     {
         private EntityRef<User> _user;
@@ -67,9 +67,11 @@ namespace REST_Service.Models
         public int UserId { get; set; }
 
         [Association(
+            Storage = "_user",
             IsForeignKey = true,
             Name = "FK_Administrator_Bruger",
-            ThisKey = "UserId")]
+            ThisKey = "UserId",
+            OtherKey = "Id")]
         private User User
         {
             get { return _user.Entity; }

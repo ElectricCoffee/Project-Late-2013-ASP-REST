@@ -9,7 +9,7 @@ namespace REST_Service.Models
     /// <summary>
     /// Linq to Sql mapping for the table Navn
     /// </summary>
-    [Table(Name = "dbo.Navn")]
+    [Table(Name = "Navn")]
     public class Name
     {
         [Column(

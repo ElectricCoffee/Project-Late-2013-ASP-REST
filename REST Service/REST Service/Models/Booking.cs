@@ -7,7 +7,7 @@ using System.Web;
 
 namespace REST_Service.Models
 {
-    [Table(Name = "dbo.Booking")]
+    [Table(Name = "Booking")]
     public class Booking : IModel
     {
         private EntityRef<Subject> _subject;
@@ -40,13 +40,15 @@ namespace REST_Service.Models
         private int SubjectId { get; set; }
 
         [Association(
+            Storage = "_subject",
             IsForeignKey = true,
             Name = "FK_Booking_Fag",
-            ThisKey = "SubjectId")]
-        public EntityRef<Subject> Subject
+            ThisKey = "SubjectId",
+            OtherKey = "Id")]
+        public Subject Subject
         {
-            get { return _subject; }
-            set { _subject = value; }
+            get { return _subject.Entity; }
+            set { _subject.Entity = value; }
         }
     }
 }

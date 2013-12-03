@@ -45,14 +45,19 @@ namespace REST_Service.Repositories
             }
         }
 
-        public IQueryable<Models.Administrator> SearchFor(Expression<Func<Models.Administrator, bool>> predicate)
+        public IEnumerable<Models.Administrator> Where(Func<Models.Administrator, bool> predicate)
         {
-            return _administratorTable.Where(predicate);
+            return _administratorTable.AsEnumerable().Where(predicate);
         }
 
-        public IQueryable<Models.Administrator> GetAll()
+        public IEnumerable<Models.Administrator> GetAll()
         {
             return _administratorTable;
+        }
+
+        public Models.Administrator Single(Func<Models.Administrator, bool> predicate)
+        {
+            return _administratorTable.AsEnumerable().FirstOrDefault(predicate);
         }
 
         public Models.Administrator GetById(int id)

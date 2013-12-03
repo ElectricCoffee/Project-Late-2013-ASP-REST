@@ -10,8 +10,9 @@ namespace REST_Service.Repositories
     {
         void InsertOnSubmit(TModel entity);
         void DeleteOnSubmit(TModel entity);
-        IQueryable<TModel> SearchFor(Expression<Func<TModel, bool>> predicate);
-        IQueryable<TModel> GetAll();
+        IEnumerable<TModel> Where(Func<TModel, bool> predicate);
+        IEnumerable<TModel> GetAll();
+        TModel Single(Func<TModel, bool> predicate);
         TModel GetById(int id);
     }
 }

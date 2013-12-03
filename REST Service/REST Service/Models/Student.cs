@@ -7,7 +7,7 @@ using System.Web;
 
 namespace REST_Service.Models
 {
-    [Table(Name = "dbo.Studerende")]
+    [Table(Name = "Studerende")]
     public class Student : IModel
     {
         private EntityRef<User> _user;
@@ -84,9 +84,11 @@ namespace REST_Service.Models
         private int HomeRoomClassId { get; set; }
 
         [Association(
+            Storage = "_homeRoomClass",
             IsForeignKey = true,
             Name = "FK_Studerende_Hold",
-            ThisKey = "HomeRoomClassId")]
+            ThisKey = "HomeRoomClassId",
+            OtherKey = "Id")]
         public HomeRoomClass HomeRoomClass
         {
             get { return _homeRoomClass.Entity; }
@@ -100,9 +102,11 @@ namespace REST_Service.Models
         public int UserId { get; set; }
 
         [Association(
+            Storage = "_user",
             IsForeignKey = true,
             Name = "FK_Studerende_Bruger",
-            ThisKey = "UserId")]
+            ThisKey = "UserId",
+            OtherKey = "Id")]
         private User User
         {
             get { return _user.Entity; }

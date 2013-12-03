@@ -58,14 +58,19 @@ namespace REST_Service.Repositories
             }
         }
 
-        public IQueryable<Models.User> SearchFor(Expression<Func<Models.User, bool>> predicate)
+        public IEnumerable<Models.User> Where(Func<Models.User, bool> predicate)
         {
-            return _userTable.Where(predicate);
+            return _userTable.AsEnumerable().Where(predicate);
         }
 
-        public IQueryable<Models.User> GetAll()
+        public IEnumerable<Models.User> GetAll()
         {
             return _userTable;
+        }
+
+        public Models.User Single(Func<Models.User, bool> predicate)
+        {
+            return _userTable.AsEnumerable().FirstOrDefault(predicate);
         }
 
         public Models.User GetById(int id)

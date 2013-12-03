@@ -36,14 +36,19 @@ namespace REST_Service.Repositories
             _bookingTable.DeleteOnSubmit(booking);
         }
 
-        public IQueryable<Models.PossibleBooking> SearchFor(Expression<Func<Models.PossibleBooking, bool>> predicate)
+        public IEnumerable<Models.PossibleBooking> Where(Func<Models.PossibleBooking, bool> predicate)
         {
-            return _possibleBookingTable.Where(predicate);
+            return _possibleBookingTable.AsEnumerable().Where(predicate);
         }
 
-        public IQueryable<Models.PossibleBooking> GetAll()
+        public IEnumerable<Models.PossibleBooking> GetAll()
         {
             return _possibleBookingTable;
+        }
+
+        public Models.PossibleBooking Single(Func<Models.PossibleBooking, bool> predicate)
+        {
+            return _possibleBookingTable.AsEnumerable().FirstOrDefault(predicate);
         }
 
         public Models.PossibleBooking GetById(int id)

@@ -17,7 +17,7 @@ namespace REST_Service.Models
     /// <summary>
     /// Linq to Sql mapping for the table Bruger
     /// </summary>
-    [Table(Name = "dbo.Bruger")]
+    [Table(Name = "Bruger")]
     public class User : IModel
     {
         // private Name _name;
@@ -51,9 +51,11 @@ namespace REST_Service.Models
         private int NameId { get; set; }
 
         [Association(
+            Storage = "_name",
             IsForeignKey = true,
             Name = "Bruger_Navn",
-            ThisKey = "NameId")]
+            ThisKey = "NameId",
+            OtherKey = "Id")]
         public Name Name
         {
             get { return _name.Entity; }

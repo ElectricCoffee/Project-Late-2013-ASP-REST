@@ -49,7 +49,7 @@ namespace REST_Service.Models
             }
         }
 
-        public EntityRef<Subject> Subject
+        public Subject Subject
         {
             get
             {
@@ -70,9 +70,11 @@ namespace REST_Service.Models
         public int BookingId { get; set; }
 
         [Association(
+            Storage = "_booking",
             IsForeignKey = true,
-            Name = "FK_Mulig Booking_Booking",
-            ThisKey = "BookingId")]
+            Name = "[FK_Mulig Booking_Booking]",
+            ThisKey = "BookingId",
+            OtherKey = "Id")]
         private Booking Booking
         {
             get { return _booking.Entity; }
