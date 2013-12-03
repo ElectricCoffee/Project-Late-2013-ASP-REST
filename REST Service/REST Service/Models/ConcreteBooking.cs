@@ -7,7 +7,7 @@ using System.Web;
 
 namespace REST_Service.Models
 {
-    enum BookingType {
+    public enum BookingType {
         Pending = 0,
         Approved = 1,
         Finished = 2

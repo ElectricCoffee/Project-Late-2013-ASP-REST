@@ -168,6 +168,7 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\PossibleBookingController.cs" />
     <Compile Include="Controllers\RegisterStudentController.cs" />
+    <Compile Include="Controllers\SubjectController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="BookingSystem.designer.cs">
       <AutoGen>True</AutoGen>

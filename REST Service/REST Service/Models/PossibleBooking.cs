@@ -8,7 +8,7 @@ using System.Web;
 namespace REST_Service.Models
 {
     [Table(Name = "[Mulig Booking]")]
-    public class PossibleBooking
+    public class PossibleBooking : IModel
     {
         private EntityRef<Booking> _booking;
 
