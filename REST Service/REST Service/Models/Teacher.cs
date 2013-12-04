@@ -4,6 +4,7 @@ using System.Data.Linq;
 using System.Data.Linq.Mapping;
 using System.Linq;
 using System.Web;
+using System.Web.Script.Serialization;
 
 namespace REST_Service.Models
 {
@@ -79,6 +80,7 @@ namespace REST_Service.Models
             set { _user.Entity = value; }
         }
 
+        [ScriptIgnore]
         [Association(
             IsForeignKey = false,
             Name = "Fag_Lærer",

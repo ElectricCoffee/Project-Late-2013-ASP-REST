@@ -115,5 +115,16 @@ namespace REST_Service.Controllers
             //Returns the HttpResponseMessage
             return message;
         }
+
+        [HttpGet]
+        public HttpResponseMessage Get()
+        {
+            var response = new HttpResponseMessage();
+            var bookings = _db.GetTable<Models.ConcreteBooking>();
+
+            response.OK(bookings.AsEnumerable().SerializeToJsonObject());
+
+            return response;
+        }
     }
 }

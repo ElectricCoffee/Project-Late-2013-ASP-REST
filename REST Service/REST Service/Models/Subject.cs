@@ -4,6 +4,7 @@ using System.Data.Linq;
 using System.Data.Linq.Mapping;
 using System.Linq;
 using System.Web;
+using System.Web.Script.Serialization;
 
 namespace REST_Service.Models
 {
@@ -35,6 +36,7 @@ namespace REST_Service.Models
             CanBeNull = false)]
         private int SemesterId { get; set; }
 
+        [ScriptIgnore]
         [Association(
             Storage = "_semester",
             IsForeignKey = true,
@@ -65,6 +67,7 @@ namespace REST_Service.Models
             set { _teacher.Entity = value; }
         }
 
+        [ScriptIgnore]
         [Association(
             Storage = "_homeRoomSubject",
             Name = "HoldFag_Fag",
@@ -76,6 +79,7 @@ namespace REST_Service.Models
             set { _homeRoomSubject.Entity = value; }
         }
 
+        [ScriptIgnore]
         public EntitySet<HomeRoomClass> HomeRoomClasses
         {
             get
@@ -90,6 +94,7 @@ namespace REST_Service.Models
             }
         }
 
+        [ScriptIgnore]
         [Association(
             IsForeignKey = false,
             Name = "FK_Booking_Fag",

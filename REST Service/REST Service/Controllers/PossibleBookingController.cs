@@ -107,7 +107,7 @@ namespace REST_Service.Controllers
         public HttpResponseMessage Get()
         {
             var response = new HttpResponseMessage();
-            var bookings = _db.GetTable<Models.PossibleBooking>();
+            var bookings = _db.GetTable<Models.PossibleBooking>().AsEnumerable();
 
             response.OK(bookings.SerializeToJsonObject());
 
