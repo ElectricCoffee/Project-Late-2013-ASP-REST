@@ -19,7 +19,8 @@ namespace REST_Service.Utils
         /// <returns>An Object that contains the data</returns>
         public static T DeserializeJson<T>(this string input)
         {
-            return new JavaScriptSerializer().Deserialize<T>(input);
+           // return new JavaScriptSerializer().Deserialize<T>(input);
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(input);
         }
 
         /// <summary>
@@ -30,7 +31,8 @@ namespace REST_Service.Utils
         /// <returns>String containing a JSON Object</returns>
         public static string SerializeToJsonObject<T>(this T input)
         {
-            return new JavaScriptSerializer().Serialize(input);
+            return Newtonsoft.Json.JsonConvert.SerializeObject(input);
+            //return new JavaScriptSerializer().Serialize(input);
         }
     }
 }

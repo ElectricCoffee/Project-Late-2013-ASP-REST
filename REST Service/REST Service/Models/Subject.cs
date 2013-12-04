@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Data.Linq;
 using System.Data.Linq.Mapping;
@@ -36,7 +37,7 @@ namespace REST_Service.Models
             CanBeNull = false)]
         private int SemesterId { get; set; }
 
-        [ScriptIgnore]
+        [ScriptIgnore][JsonIgnore]
         [Association(
             Storage = "_semester",
             IsForeignKey = true,
@@ -67,7 +68,7 @@ namespace REST_Service.Models
             set { _teacher.Entity = value; }
         }
 
-        [ScriptIgnore]
+        [ScriptIgnore][JsonIgnore]
         [Association(
             Storage = "_homeRoomSubject",
             Name = "HoldFag_Fag",
@@ -79,7 +80,7 @@ namespace REST_Service.Models
             set { _homeRoomSubject.Entity = value; }
         }
 
-        [ScriptIgnore]
+        [ScriptIgnore][JsonIgnore]
         public EntitySet<HomeRoomClass> HomeRoomClasses
         {
             get
@@ -94,7 +95,7 @@ namespace REST_Service.Models
             }
         }
 
-        [ScriptIgnore]
+        [ScriptIgnore][JsonIgnore]
         [Association(
             IsForeignKey = false,
             Name = "FK_Booking_Fag",

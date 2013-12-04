@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using REST_Service.Utils;
+using Newtonsoft.Json.Converters;
 
 namespace REST_Service.Controllers
 {
@@ -43,7 +44,7 @@ namespace REST_Service.Controllers
         /// <param name="endDate"></param>
         /// <param name="inputSubject"></param>
         [HttpPost]
-        public void Post([FromBody]Models.PossibleBooking possibleBooking)
+        public HttpResponseMessage Post([FromBody]Models.PossibleBooking possibleBooking)
         {
             
             // Takes care of the try-catch boilerplate by wrapping it in an action
@@ -58,18 +59,20 @@ namespace REST_Service.Controllers
                     Debug.WriteLine("DEBUG: " + e.Message);
                 }
             };
-
+            var message = new HttpResponseMessage();
             // gets the subject from the database
             var subject = _db.GetTable<Models.Subject>().SingleOrDefault(s => s.Name == possibleBooking.Subject.Name);
 
             if (subject != null)
-                possibleBooking.Subject = subject;
+            {
+                // write it to the database
+                _db.GetTable<Models.PossibleBooking>().InsertOnSubmit(possibleBooking);
 
-            // write it to the database
-            _db.GetTable<Models.PossibleBooking>().InsertOnSubmit(possibleBooking);
-
-            // commit changes to the database
-            submitChanges(_db);
+                // commit changes to the database
+                submitChanges(_db);
+                message.OK("{\"Response\":\"OK\"}");
+            }
+            else message.Forbidden("Faget blev ikke fundet");
         }
 
         /// <summary>

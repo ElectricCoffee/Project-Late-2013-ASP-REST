@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Data.Linq;
 using System.Data.Linq.Mapping;
@@ -80,7 +81,7 @@ namespace REST_Service.Models
             set { _user.Entity = value; }
         }
 
-        [ScriptIgnore]
+        [ScriptIgnore][JsonIgnore]
         [Association(
             IsForeignKey = false,
             Name = "Fag_Lærer",

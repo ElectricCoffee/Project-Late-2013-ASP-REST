@@ -12,26 +12,43 @@ namespace REST_Service.Controllers
     public class SubjectController : ApiController
     {
         private string _connectionString = ConfigurationManager.ConnectionStrings["DummyConnection"].ConnectionString;
-        private BookingSystemDataContext _db;
+        private DataLayer.ManualBookingSystemDataContext _db;
 
-        public SubjectController(BookingSystemDataContext context)
+        public SubjectController(DataLayer.ManualBookingSystemDataContext context)
         {
             _db = context;
         }
+
         public SubjectController()
         {
-            _db = new BookingSystemDataContext(_connectionString);
+            _db = new DataLayer.ManualBookingSystemDataContext(_connectionString);
         }
 
         [HttpGet]
         public HttpResponseMessage Get() {
-            var subjects = _db.Fags;
+            var subjects = _db.Subjects;
 
-            HttpResponseMessage response = new HttpResponseMessage();
+            var response = new HttpResponseMessage();
 
             response.OK(subjects.SerializeToJsonObject());
 
             return response;
+        }
+
+        public HttpResponseMessage Get([FromUri]int teacherId)
+        {
+            var subjects = _db.Subjects;
+            var response = new HttpResponseMessage();
+
+            var subject = subjects.FirstOrDefault(s => s.Teacher.Id == teacherId);
+
+            if (subject != null)
+                response.OK(subject.SerializeToJsonObject());
+            else
+                response.Forbidden("Den pågældende lærer blev ikke fundet");
+
+            return response;
+
         }
     }
 }
