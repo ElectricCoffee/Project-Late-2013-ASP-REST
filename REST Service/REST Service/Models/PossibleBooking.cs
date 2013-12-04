@@ -64,12 +64,6 @@ namespace REST_Service.Models
             }
         }
 
-        public Subject Subject
-        {
-            get { return SubjectRef.Entity; }
-            set { SubjectRef = new EntityRef<Subject>(value); }
-        }
-
         [Column(
             Name = "Booking_id",
             DbType = "INT NOT NULL",
