@@ -120,7 +120,6 @@ namespace REST_Service.Models
             CanBeNull = false)]
         public int PossibleBookingId { get; set; }
 
-        #region this part annoys me
         [Association(
             Storage = "_possibleBooking",
             IsForeignKey = true,
@@ -132,7 +131,6 @@ namespace REST_Service.Models
             get { return _possibleBooking.Entity; }
             set { _possibleBooking.Entity = value; }
         }
-        #endregion
 
         [Column(
             Name = "Booking_id",
