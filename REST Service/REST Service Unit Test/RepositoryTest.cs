@@ -61,10 +61,7 @@ namespace REST_Service_Unit_Test
                 Password = "1234",
                 Approved = false,
                 Name = name,
-                HomeRoomClass = new Models.HomeRoomClass
-                {
-                    Name = "Dat12x"
-                }
+                HomeRoomClass = _context.HomeRoomClasses.SingleOrDefault(h => h.Name == "dat12x")
             };
 
             students.InsertOnSubmit(student);

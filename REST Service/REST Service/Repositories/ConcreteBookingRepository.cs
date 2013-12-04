@@ -38,7 +38,8 @@ namespace REST_Service.Repositories
 
         public IEnumerable<Models.ConcreteBooking> Where(Func<Models.ConcreteBooking, bool> predicate)
         {
-            return _concreteBookingTable.AsEnumerable().Where(predicate);
+            var concreteBookings = _concreteBookingTable.AsEnumerable();
+            return concreteBookings.Where(predicate);
         }
 
         public IEnumerable<Models.ConcreteBooking> GetAll()
@@ -48,8 +49,7 @@ namespace REST_Service.Repositories
 
         public Models.ConcreteBooking Single(Func<Models.ConcreteBooking, bool> predicate)
         {
-            var concreteBookings = _concreteBookingTable.AsEnumerable();
-            return concreteBookings.FirstOrDefault(predicate);
+            return _concreteBookingTable.AsEnumerable().FirstOrDefault(predicate);
         }
 
         public Models.ConcreteBooking GetById(int id)
