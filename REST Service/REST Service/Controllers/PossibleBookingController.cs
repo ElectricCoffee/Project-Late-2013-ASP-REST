@@ -73,6 +73,8 @@ namespace REST_Service.Controllers
                 message.OK("{\"Response\":\"OK\"}");
             }
             else message.Forbidden("Faget blev ikke fundet");
+
+            return message;
         }
 
         /// <summary>
