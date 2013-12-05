@@ -4,6 +4,7 @@ using System.Data.Linq;
 using System.Linq.Expressions;
 using System.Linq;
 using System.Web;
+using System.Diagnostics;
 
 namespace REST_Service.Repositories
 {
@@ -25,18 +26,13 @@ namespace REST_Service.Repositories
             _concreteBookings = _dataContext.ConcreteBookings;
             _possibleBookings = _dataContext.PossibleBookings;
         }
-
+		
         /// <summary>
         /// Creating basic Booking entities are discouraged, go through the specializations instead,
         /// i.e. ConcreteBookingRepository or PossibleBookingRepository
         /// </summary>
         /// <param name="booking">The Booking enity to be inserted</param>
         public override void InsertOnSubmit(Models.Booking booking)
-        {
-            throw (new MethodAccessException(
-                "Attempt to create basic Bookings are discouraged," +
-                "go through the specializations instead"));
-        }
 
         /// <summary>
         /// Enqueues a Booking entity to be deleted from the table on submit
@@ -53,8 +49,8 @@ namespace REST_Service.Repositories
             var concreteBooking = _concreteBookings.SingleOrDefault(s => s.Id == booking.Id);
             if (concreteBooking != null)
                 _concreteBookings.DeleteOnSubmit(concreteBooking);
-
-            var possibleBooking = _possibleBookings.SingleOrDefault(t => t.Id == booking.Id);
+			
+			var possibleBooking = _possibleBookings.SingleOrDefault(t => t.Id == booking.Id);
             if (possibleBooking != null)
                 _possibleBookings.DeleteOnSubmit(possibleBooking);
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Data.Linq;
 using System.Data.Linq.Mapping;
@@ -104,9 +105,10 @@ namespace REST_Service.Models
             CanBeNull = false)]
         private int HomeRoomClassId { get; set; }
 
-        /// <summary>
+		/// <summary>
         /// Gets or sets the associated HomeRoomClass entity
         /// </summary>
+        [JsonIgnore]
         [Association(
             Storage = "_homeRoomClass",
             IsForeignKey = true,
