@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Transactions;
 using REST_Service.Utils;
 
 namespace REST_Service.Controllers
@@ -82,20 +83,27 @@ namespace REST_Service.Controllers
         }
 
         [HttpDelete]
-        public HttpResponseMessage Delete([FromUri] int concreteBookingId)
+        public HttpResponseMessage Delete([FromUri] int id)
         {
             var message = new HttpResponseMessage();
             var bookingRepo = new Repositories.BookingRepository(_db);
+            var concBookingRepo = new Repositories.ConcreteBookingRepository(_db);
 
-            var concBook = bookingRepo.Single(cb => cb.Id == concreteBookingId);
+            var concBook = concBookingRepo.GetById(id);
+            var book = bookingRepo.GetById(concBook.BookingId);
 
-            if (concBook != null)
+            if (book != null)
             {
-                bookingRepo.DeleteOnSubmit(concBook);
+                using (var transaction = new TransactionScope())
+                {
+                    bookingRepo.DeleteOnSubmit(book);
 
-                _db.SafeSubmitChanges();
+                    _db.SafeSubmitChanges();
 
-                message.OK(RESPONSE_OK);
+                    if (bookingRepo.Single(b => b == book) == null)
+                        message.OK(RESPONSE_OK);
+                    else message.Forbidden("You done derped, son");
+                }
             }
             else 
                 message.Forbidden("Den valgte række i tabellen kunne ikke findes");
@@ -107,9 +115,9 @@ namespace REST_Service.Controllers
         public HttpResponseMessage Get()
         {
             var response = new HttpResponseMessage();
-            var bookings = _db.GetTable<Models.ConcreteBooking>();
+            var bookings = new Repositories.ConcreteBookingRepository(_db).GetAll();
 
-            response.OK(bookings.AsEnumerable().SerializeToJsonObject());
+            response.OK(bookings.SerializeToJsonObject());
 
             return response;
         }

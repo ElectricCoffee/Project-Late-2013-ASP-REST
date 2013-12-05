@@ -4,6 +4,7 @@ using System.Data.Linq;
 using System.Linq.Expressions;
 using System.Linq;
 using System.Web;
+using System.Diagnostics;
 
 namespace REST_Service.Repositories
 {
@@ -23,25 +24,32 @@ namespace REST_Service.Repositories
             _possibleBookingTable = dataContext.PossibleBookings;
         }
 
-        public void InsertOnSubmit(Models.Booking bookings)
+        public void InsertOnSubmit(Models.Booking booking)
         {
             throw (new MethodAccessException(
                 "Attempt to create basic Bookings are discouraged," +
                 "go through the specializations instead"));
         }
 
-        public void DeleteOnSubmit(Models.Booking bookings)
+        public void DeleteOnSubmit(Models.Booking booking)
         {
-            var concreteBooking = _concreteBookingTable.SingleOrDefault(s => s.Id == bookings.Id);
+            var concreteBooking = _concreteBookingTable.SingleOrDefault(s => s.Id == booking.Id);
             if (concreteBooking != null)
                 _concreteBookingTable.DeleteOnSubmit(concreteBooking);
 
-            var possibleBooking = _possibleBookingTable.SingleOrDefault(t => t.Id == bookings.Id);
+            var possibleBooking = _possibleBookingTable.SingleOrDefault(t => t.Id == booking.Id);
             if (possibleBooking != null)
                 _possibleBookingTable.DeleteOnSubmit(possibleBooking);
 
-            _bookingTable.Attach(bookings);
-            _bookingTable.DeleteOnSubmit(bookings);
+            try
+            {
+                //_bookingTable.Attach(booking);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("DEBUG: " + e.Message);
+            }
+            _bookingTable.DeleteOnSubmit(booking);
         }
 
         public IEnumerable<Models.Booking> Where(Func<Models.Booking, bool> predicate)
