@@ -7,12 +7,18 @@ using System.Web;
 
 namespace REST_Service.Models
 {
+    /// <summary>
+    /// Linq to Sql mapping for the association table HoldFag
+    /// </summary>
     [Table(Name = "HoldFag")]
     public class HomeRoomSubject : IModel
     {
         private EntitySet<HomeRoomClass> _homeRoomClasses;
         private EntitySet<Subject> _subjects;
 
+        /// <summary>
+        /// Gets the value of the column _id
+        /// </summary>
         [Column(
             Name = "_id",
             DbType = "INT NOT NULL PRIMARY KEY IDENTITY",
@@ -22,12 +28,18 @@ namespace REST_Service.Models
             IsDbGenerated = true)]
         public int Id { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the value of the column Hold_id
+        /// </summary>
         [Column(
             Name = "Hold_id",
             DbType = "INT NOT NULL",
             CanBeNull = false)]
         public int HomeRoomClassId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the associated HomeRoomClass entityset
+        /// </summary>
         [Association(
             IsForeignKey = true,
             Name = "HoldFag_Hold",
@@ -39,12 +51,18 @@ namespace REST_Service.Models
             set { _homeRoomClasses = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the value of the column Fag_id
+        /// </summary>
         [Column(
             Name = "Fag_id",
             DbType = "INT NOT NULL",
             CanBeNull = false)]
         public int SubjectId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the associated Subject entityset
+        /// </summary>
         [Association(
             IsForeignKey = true,
             Name = "HoldFag_Fag",

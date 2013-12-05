@@ -7,62 +7,46 @@ using System.Web;
 
 namespace REST_Service.Repositories
 {
-    public class AdministratorRepository : IRepository<Models.Administrator>
+    /// <summary>
+    /// A specific implementation of IRepository specialized for Administrator entites
+    /// </summary>
+    public class AdministratorRepository : SimpleRepository<Models.Administrator>
     {
-        private DataLayer.ManualBookingSystemDataContext _dataContext;
-        private Table<Models.Name> _nameTable;
-        private Table<Models.User> _userTable;
-        private Table<Models.Administrator> _administratorTable;
-        
+        private Table<Models.Name> _names;
+        private Table<Models.User> _users;
+
+        /// <summary>
+        /// Creates a new AdministratorRepository instance
+        /// </summary>
+        /// <param name="dataContext">An instance of ManualBookingSystemDataContext</param>
         public AdministratorRepository(DataLayer.ManualBookingSystemDataContext dataContext)
+            : base(dataContext)
         {
-            _dataContext = dataContext;
-            _nameTable = dataContext.GetTable<Models.Name>();
-            _userTable = dataContext.GetTable<Models.User>();
-            _administratorTable = dataContext.GetTable<Models.Administrator>();
+            _names = _dataContext.GetTable<Models.Name>();
+            _users = _dataContext.GetTable<Models.User>();
         }
 
-        public void InsertOnSubmit(Models.Administrator administrator)
+        /// <summary>
+        /// Enqueues an Administrator entity to be deleted from the table on submit
+        /// </summary>
+        /// <remarks>
+        /// If the associated Name entity was only used by the deleted Administrator entity,
+        /// then that Name entity is also deleted
+        /// </remarks>
+        /// <param name="administrator">The Administrator entity to be deleted</param>
+        public override void DeleteOnSubmit(Models.Administrator administrator)
         {
-            _administratorTable.InsertOnSubmit(administrator);
-        }
+            base.DeleteOnSubmit(administrator);
 
-        public void DeleteOnSubmit(Models.Administrator administrator)
-        {
-            _administratorTable.Attach(administrator);
-            _administratorTable.DeleteOnSubmit(administrator);
+            var user = _users.SingleOrDefault(u => u.Id == administrator.UserId);
 
-            var user = _userTable.SingleOrDefault(u => u.Id == administrator.UserId);
+            _users.DeleteOnSubmit(user);
 
-            _userTable.Attach(user);
-            _userTable.DeleteOnSubmit(user);
-
-            if (_nameTable.Count(n => n == administrator.Name) == 1)
+            if (_names.Count(n => n == administrator.Name) == 1)
             {
-                var name = _nameTable.SingleOrDefault(n => n == administrator.Name);
-                _nameTable.Attach(name);
-                _nameTable.DeleteOnSubmit(name);
+                var name = _names.SingleOrDefault(n => n == administrator.Name);
+                _names.DeleteOnSubmit(name);
             }
-        }
-
-        public IEnumerable<Models.Administrator> Where(Func<Models.Administrator, bool> predicate)
-        {
-            return _administratorTable.AsEnumerable().Where(predicate);
-        }
-
-        public IEnumerable<Models.Administrator> GetAll()
-        {
-            return _administratorTable;
-        }
-
-        public Models.Administrator Single(Func<Models.Administrator, bool> predicate)
-        {
-            return _administratorTable.AsEnumerable().FirstOrDefault(predicate);
-        }
-
-        public Models.Administrator GetById(int id)
-        {
-            return _administratorTable.Single(m => m.Id.Equals(id));
         }
     }
 }

@@ -7,62 +7,45 @@ using System.Web;
 
 namespace REST_Service.Repositories
 {
-    public class TeacherRepository : IRepository<Models.Teacher>
+    /// <summary>
+    /// A specific implementation of IRepository specialized for Teacher entites
+    /// </summary>
+    public class TeacherRepository : SimpleRepository<Models.Teacher>
     {
-        private DataLayer.ManualBookingSystemDataContext _dataContext;
-        private Table<Models.Name> _nameTable;
-        private Table<Models.User> _userTable;
-        private Table<Models.Teacher> _teacherTable;
-        
+        private Table<Models.Name> _names;
+        private Table<Models.User> _users;
+
+        /// <summary>
+        /// Creates a new TeacherRepository instance
+        /// </summary>
+        /// <param name="dataContext">An instance of ManualBookingSystemDataContext</param>
         public TeacherRepository(DataLayer.ManualBookingSystemDataContext dataContext)
+            : base(dataContext)
         {
-            _dataContext = dataContext;
-            _nameTable = dataContext.Names;
-            _userTable = dataContext.Users;
-            _teacherTable = dataContext.Teachers;
+            _names = _dataContext.Names;
+            _users = _dataContext.Users;
         }
 
-        public void InsertOnSubmit(Models.Teacher teacher)
+        /// <summary>
+        /// Enqueues a Teacher entity to be deleted from the table on submit
+        /// </summary>
+        /// <remarks>
+        /// If the associated Name entity was only used by the deleted teacher entity,
+        /// then that Name entity is also deleted
+        /// </remarks>
+        /// <param name="teacher">The Teacher entity to be deleted</param>
+        public override void DeleteOnSubmit(Models.Teacher teacher)
         {
-            _teacherTable.InsertOnSubmit(teacher);
-        }
+            base.DeleteOnSubmit(teacher);
 
-        public void DeleteOnSubmit(Models.Teacher teacher)
-        {
-            _teacherTable.Attach(teacher);
-            _teacherTable.DeleteOnSubmit(teacher);
+            var user = _users.SingleOrDefault(u => u.Id == teacher.UserId);
+            _users.DeleteOnSubmit(user);
 
-            var user = _userTable.SingleOrDefault(u => u.Id == teacher.UserId);
-
-            _userTable.Attach(user);
-            _userTable.DeleteOnSubmit(user);
-
-            if (_nameTable.Count(n => n == teacher.Name) == 1)
+            if (_names.Count(n => n == teacher.Name) == 1)
             {
-                var name = _nameTable.SingleOrDefault(n => n == teacher.Name);
-                _nameTable.Attach(name);
-                _nameTable.DeleteOnSubmit(name);
+                var name = _names.SingleOrDefault(n => n == teacher.Name);
+                _names.DeleteOnSubmit(name);
             }
-        }
-
-        public IEnumerable<Models.Teacher> Where(Func<Models.Teacher, bool> predicate)
-        {
-            return _teacherTable.AsEnumerable().Where(predicate);
-        }
-
-        public IEnumerable<Models.Teacher> GetAll()
-        {
-            return _teacherTable;
-        }
-
-        public Models.Teacher Single(Func<Models.Teacher, bool> predicate)
-        {
-            return _teacherTable.AsEnumerable().FirstOrDefault(predicate);
-        }
-
-        public Models.Teacher GetById(int id)
-        {
-            return _teacherTable.Single(m => m.Id.Equals(id));
         }
     }
 }

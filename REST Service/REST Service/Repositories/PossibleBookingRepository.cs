@@ -7,53 +7,37 @@ using System.Web;
 
 namespace REST_Service.Repositories
 {
-    public class PossibleBookingRepository : IRepository<Models.PossibleBooking>
+    /// <summary>
+    /// A specific implementation of IRepository specialized for PossibleBooking entites
+    /// </summary>
+    public class PossibleBookingRepository : SimpleRepository<Models.PossibleBooking>
     {
-        private DataLayer.ManualBookingSystemDataContext _dataContext;
         private Table<Models.Booking> _bookingTable;
-        private Table<Models.PossibleBooking> _possibleBookingTable;
 
+        /// <summary>
+        /// Creates a new PossibleBookingRepository instance
+        /// </summary>
+        /// <param name="dataContext">An instance of ManualBookingSystemDataContext</param>
         public PossibleBookingRepository(DataLayer.ManualBookingSystemDataContext dataContext)
+            : base(dataContext)
         {
-            _dataContext = dataContext;
-            _bookingTable = dataContext.Bookings;
-            _possibleBookingTable = dataContext.PossibleBookings;
+            _bookingTable = _dataContext.Bookings;
         }
 
-        public void InsertOnSubmit(Models.PossibleBooking possibleBooking)
+        /// <summary>
+        /// Enqueues a PossibleBooking entity to be deleted from the table on submit
+        /// </summary>
+        /// <remarks>
+        /// If the associated Name entity was only used by the deleted PossibleBooking entity,
+        /// then that Name entity is also deleted
+        /// </remarks>
+        /// <param name="possibleBooking">The PossibleBooking entity to be deleted</param>
+        public override void DeleteOnSubmit(Models.PossibleBooking possibleBooking)
         {
-            _possibleBookingTable.InsertOnSubmit(possibleBooking);
-        }
-
-        public void DeleteOnSubmit(Models.PossibleBooking possibleBooking)
-        {
-            _possibleBookingTable.Attach(possibleBooking);
-            _possibleBookingTable.DeleteOnSubmit(possibleBooking);
+            base.DeleteOnSubmit(possibleBooking);
 
             var booking = _bookingTable.SingleOrDefault(u => u.Id == possibleBooking.BookingId);
-
-            _bookingTable.Attach(booking);
             _bookingTable.DeleteOnSubmit(booking);
-        }
-
-        public IEnumerable<Models.PossibleBooking> Where(Func<Models.PossibleBooking, bool> predicate)
-        {
-            return _possibleBookingTable.AsEnumerable().Where(predicate);
-        }
-
-        public IEnumerable<Models.PossibleBooking> GetAll()
-        {
-            return _possibleBookingTable;
-        }
-
-        public Models.PossibleBooking Single(Func<Models.PossibleBooking, bool> predicate)
-        {
-            return _possibleBookingTable.AsEnumerable().FirstOrDefault(predicate);
-        }
-
-        public Models.PossibleBooking GetById(int id)
-        {
-            return _possibleBookingTable.Single(m => m.Id.Equals(id));
         }
     }
 }

@@ -196,11 +196,12 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AdministratorRepository.cs" />
-    <Compile Include="Repositories\AuthentificationRepository.cs" />
+    <Compile Include="Repositories\AuthenticationRepository.cs" />
     <Compile Include="Repositories\BookingRepository.cs" />
     <Compile Include="Repositories\ConcreteBookingRepository.cs" />
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\PossibleBookingRepository.cs" />
+    <Compile Include="Repositories\SimpleRepository.cs" />
     <Compile Include="Repositories\StudentRepository.cs" />
     <Compile Include="Repositories\TeacherRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />

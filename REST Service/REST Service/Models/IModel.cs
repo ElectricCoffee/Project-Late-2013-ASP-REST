@@ -5,8 +5,11 @@ using System.Web;
 
 namespace REST_Service.Models
 {
-    public class IModel
+    public interface IModel
     {
-        int Id { get; set; }
+        /// <summary>
+        /// Gets or the value of the column _id
+        /// </summary>
+        int Id { get; }
     }
 }

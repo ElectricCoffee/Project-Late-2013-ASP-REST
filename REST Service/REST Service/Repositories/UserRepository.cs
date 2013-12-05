@@ -7,75 +7,74 @@ using System.Web;
 
 namespace REST_Service.Repositories
 {
-    public class UserRepository : IRepository<Models.User>
+    /// <summary>
+    /// A specific implementation of IRepository compatible with User entites
+    /// </summary>
+    public class UserRepository : SimpleRepository<Models.User>
     {
-        private DataLayer.ManualBookingSystemDataContext _dataContext;
-        private Table<Models.Name> _nameTable;
-        private Table<Models.User> _userTable;
-        private Table<Models.Student> _studentTable;
-        private Table<Models.Teacher> _teacherTable;
-        private Table<Models.Administrator> _administratorTable;
-        
+        private Table<Models.Name> _names;
+        private Table<Models.Student> _students;
+        private Table<Models.Teacher> _teachers;
+        private Table<Models.Administrator> _administrators;
+
+        /// <summary>
+        /// Creates a new UserRepository instance
+        /// </summary>
+        /// <param name="dataContext">An instance of ManualBookingSystemDataContext</param>
         public UserRepository(DataLayer.ManualBookingSystemDataContext dataContext)
+            :base(dataContext)
         {
-            _dataContext = dataContext;
-            _nameTable = dataContext.Names;
-            _userTable = dataContext.Users;
-            _studentTable = dataContext.Students;
-            _teacherTable = dataContext.Teachers;
-            _administratorTable = dataContext.Administrators;
+            _names = _dataContext.Names;
+            _students = _dataContext.Students;
+            _teachers = _dataContext.Teachers;
+            _administrators = _dataContext.Administrators;
         }
 
-        public void InsertOnSubmit(Models.User user)
+        /// <summary>
+        /// Creating basic User entities are discouraged, go through the specializations instead,
+        /// i.e. AdministratorRepository, StudentRepository or TeacherRepository
+        /// </summary>
+        /// <param name="user">The User entity to be inserted</param>
+        public override void InsertOnSubmit(Models.User user)
         {
             throw (new MethodAccessException(
                 "Attempt to create basic Users are discouraged," +
                 "go through the specializations instead"));
         }
 
-        public void DeleteOnSubmit(Models.User user)
+        /// <summary>
+        /// Enqueues a User entity to be deleted from the table on submit
+        /// </summary>
+        /// <remarks>
+        /// Also checks that the User entity doesn't exist as a specialized entity,
+        /// i.e. Administrator, Student or Teacher.
+        /// If the User entity is found to be either of the specializations,
+        /// the specialized entity is deleted before the User entity itself.
+        /// Furthermore if the associated Name entity was only used by the deleted User entity,
+        /// then that Name entity is also deleted
+        /// </remarks>
+        /// <param name="user">The User entity to be deleted</param>
+        public override void DeleteOnSubmit(Models.User user)
         {
-            var student = _studentTable.SingleOrDefault(s => s.UserId == user.Id);
+            var student = _students.SingleOrDefault(s => s.UserId == user.Id);
             if (student != null)
-                _studentTable.DeleteOnSubmit(student);
+                _students.DeleteOnSubmit(student);
 
-            var teacher = _teacherTable.SingleOrDefault(t => t.UserId == user.Id);
+            var teacher = _teachers.SingleOrDefault(t => t.UserId == user.Id);
             if (teacher != null)
-                _teacherTable.DeleteOnSubmit(teacher);
+                _teachers.DeleteOnSubmit(teacher);
 
-            var administrator = _administratorTable.SingleOrDefault(a => a.UserId == user.Id);
+            var administrator = _administrators.SingleOrDefault(a => a.UserId == user.Id);
             if (administrator != null)
-                _administratorTable.DeleteOnSubmit(administrator);
+                _administrators.DeleteOnSubmit(administrator);
 
-            _userTable.Attach(user);
-            _userTable.DeleteOnSubmit(user);
+            base.DeleteOnSubmit(user);
 
-            if (_nameTable.Count(n => n == user.Name) == 1)
+            if (_names.Count(n => n == user.Name) == 1)
             {
-                var name = _nameTable.SingleOrDefault(n => n == user.Name);
-                _nameTable.Attach(name);
-                _nameTable.DeleteOnSubmit(name);
+                var name = _names.SingleOrDefault(n => n == user.Name);
+                _names.DeleteOnSubmit(name);
             }
-        }
-
-        public IEnumerable<Models.User> Where(Func<Models.User, bool> predicate)
-        {
-            return _userTable.AsEnumerable().Where(predicate);
-        }
-
-        public IEnumerable<Models.User> GetAll()
-        {
-            return _userTable;
-        }
-
-        public Models.User Single(Func<Models.User, bool> predicate)
-        {
-            return _userTable.AsEnumerable().FirstOrDefault(predicate);
-        }
-
-        public Models.User GetById(int id)
-        {
-            return _userTable.Single(m => m.Id.Equals(id));
         }
     }
 }

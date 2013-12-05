@@ -8,11 +8,17 @@ using System.Web.Script.Serialization;
 
 namespace REST_Service.Models
 {
+    /// <summary>
+    /// Linq to Sql mapping for the table Mulig Booking
+    /// </summary>
     [Table(Name = "[Mulig Booking]")]
-    public class PossibleBooking : IModel
+    public class PossibleBooking : Booking
     {
         private EntityRef<Booking> _booking;
 
+        /// <summary>
+        /// Gets the value of the column _id
+        /// </summary>
         [Column(
             Name = "_id",
             DbType = "INT NOT NULL PRIMARY KEY IDENTITY",
@@ -20,15 +26,21 @@ namespace REST_Service.Models
             CanBeNull = false,
             IsPrimaryKey = true,
             IsDbGenerated = true)]
-        public int Id { get; private set; }
+        public override int Id { get; protected set; }
 
+        /// <summary>
+        /// Gets or sets the value of the column Varighed
+        /// </summary>
         [Column(
             Name = "Varighed",
             DbType = "INT NOT NULL",
             CanBeNull = false)]
         public int Duration { get; set; }
 
-        public DateTime StartTime
+        /// <summary>
+        /// Gets or sets the value of the column StartTid of the disjointed table Booking
+        /// </summary>
+        public override DateTime StartTime
         {
             get
             {
@@ -42,7 +54,10 @@ namespace REST_Service.Models
             }
         }
 
-        public DateTime EndTime
+        /// <summary>
+        /// Gets or sets the value of the column SlutTid of the disjointed table Booking
+        /// </summary>
+        public override DateTime EndTime
         {
             get
             {
@@ -56,7 +71,10 @@ namespace REST_Service.Models
             }
         }
 
-        public Subject Subject
+        /// <summary>
+        /// Gets or sets the associated Subject entity of the disjointed table Booking
+        /// </summary>
+        public override Subject Subject
         {
             get
             {
@@ -70,12 +88,18 @@ namespace REST_Service.Models
             }
         }
 
+        /// <summary>
+        /// Gets or sets the value of the column Bruger_id
+        /// </summary>
         [Column(
             Name = "Booking_id",
             DbType = "INT NOT NULL",
             CanBeNull = false)]
         public int BookingId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the associated Booking entity
+        /// </summary>
         [Association(
             Storage = "_booking",
             IsForeignKey = true,
@@ -88,6 +112,9 @@ namespace REST_Service.Models
             set { _booking.Entity = value; }
         }
 
+        /// <summary>
+        /// Makes sure that an instance of Booking Exists
+        /// </summary>
         private void EnsureBookingExists()
         {
             if (Booking == null)

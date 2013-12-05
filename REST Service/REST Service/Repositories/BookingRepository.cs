@@ -7,61 +7,58 @@ using System.Web;
 
 namespace REST_Service.Repositories
 {
-    public class BookingRepository : IRepository<Models.Booking>
+    /// <summary>
+    /// A specific implementation of IRepository specialized for Booking entites
+    /// </summary>
+    public class BookingRepository : SimpleRepository<Models.Booking>
     {
-        private DataLayer.ManualBookingSystemDataContext _dataContext;
-        private Table<Models.Booking> _bookingTable;
-        private Table<Models.ConcreteBooking> _concreteBookingTable;
-        private Table<Models.PossibleBooking> _possibleBookingTable;
+        private Table<Models.ConcreteBooking> _concreteBookings;
+        private Table<Models.PossibleBooking> _possibleBookings;
 
-
+        /// <summary>
+        /// Creates a new BookingRepository instance
+        /// </summary>
+        /// <param name="dataContext">An instance of ManualBookingSystemDataContext</param>
         public BookingRepository(DataLayer.ManualBookingSystemDataContext dataContext)
+            : base(dataContext)
         {
-            _dataContext = dataContext;
-            _bookingTable = dataContext.Bookings;
-            _concreteBookingTable = dataContext.ConcreteBookings;
-            _possibleBookingTable = dataContext.PossibleBookings;
+            _concreteBookings = _dataContext.ConcreteBookings;
+            _possibleBookings = _dataContext.PossibleBookings;
         }
 
-        public void InsertOnSubmit(Models.Booking bookings)
+        /// <summary>
+        /// Creating basic Booking entities are discouraged, go through the specializations instead,
+        /// i.e. ConcreteBookingRepository or PossibleBookingRepository
+        /// </summary>
+        /// <param name="booking">The Booking enity to be inserted</param>
+        public override void InsertOnSubmit(Models.Booking booking)
         {
             throw (new MethodAccessException(
                 "Attempt to create basic Bookings are discouraged," +
                 "go through the specializations instead"));
         }
 
-        public void DeleteOnSubmit(Models.Booking bookings)
+        /// <summary>
+        /// Enqueues a Booking entity to be deleted from the table on submit
+        /// </summary>
+        /// <remarks>
+        /// Also checks that the Booking entity doesn't exist as a specialized entity,
+        /// i.e. ConcreteBooking or PossibleBooking.
+        /// If the Booking entity is found to be either of the specializations,
+        /// the specialized entity is deleted before the Booking entity itself.
+        /// </remarks>
+        /// <param name="booking">The Booking entity to be deleted</param>
+        public override void DeleteOnSubmit(Models.Booking booking)
         {
-            var concreteBooking = _concreteBookingTable.SingleOrDefault(s => s.Id == bookings.Id);
+            var concreteBooking = _concreteBookings.SingleOrDefault(s => s.Id == booking.Id);
             if (concreteBooking != null)
-                _concreteBookingTable.DeleteOnSubmit(concreteBooking);
+                _concreteBookings.DeleteOnSubmit(concreteBooking);
 
-            var possibleBooking = _possibleBookingTable.SingleOrDefault(t => t.Id == bookings.Id);
+            var possibleBooking = _possibleBookings.SingleOrDefault(t => t.Id == booking.Id);
             if (possibleBooking != null)
-                _possibleBookingTable.DeleteOnSubmit(possibleBooking);
+                _possibleBookings.DeleteOnSubmit(possibleBooking);
 
-            _bookingTable.Attach(bookings);
-            _bookingTable.DeleteOnSubmit(bookings);
-        }
-
-        public IEnumerable<Models.Booking> Where(Func<Models.Booking, bool> predicate)
-        {
-            return _bookingTable.AsEnumerable().Where(predicate);
-        }
-
-        public IEnumerable<Models.Booking> GetAll()
-        {
-            return _bookingTable;
-        }
-
-        public Models.Booking Single(Func<Models.Booking, bool> predicate)
-        {
-            return _bookingTable.AsEnumerable().FirstOrDefault(predicate);
-        }
-
-        public Models.Booking GetById(int id)
-        {
-            return _bookingTable.Single(m => m.Id.Equals(id));
+            base.DeleteOnSubmit(booking);
         }
     }
 }

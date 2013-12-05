@@ -10,10 +10,29 @@ namespace REST_Service
         public static void Register(HttpConfiguration config)
         {
             config.Routes.MapHttpRoute(
+                name: "Registration",
+                routeTemplate: "register",
+                defaults: new { controller = "register" }
+            );
+            config.Routes.MapHttpRoute(
+                name: "Authentication",
+                routeTemplate: "authenticate",
+                defaults: new { controller = "login" }
+            );
+            config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            /*
+             * For when the server needs to accept access tokens
+            config.Routes.MapHttpRoute(
+                name: "DefaultApi",
+                routeTemplate: "{accessToken}/api/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional }
+            );
+             */
 
             var appXmlType = config.Formatters.XmlFormatter.SupportedMediaTypes.FirstOrDefault(t => t.MediaType == "application/xml");
             config.Formatters.XmlFormatter.SupportedMediaTypes.Remove(appXmlType);

@@ -9,12 +9,18 @@ using System.Web.Script.Serialization;
 
 namespace REST_Service.Models
 {
+    /// <summary>
+    /// Linq to Sql mapping for the table Hold
+    /// </summary>
     [Table(Name = "Hold")]
     public class HomeRoomClass : IModel
     {
         EntitySet<Student> _students;
         EntityRef<HomeRoomSubject> _homeRoomSubject;
 
+        /// <summary>
+        /// Gets the value of the column _id
+        /// </summary>
         [Column(
             Name = "_id",
             DbType = "INT NOT NULL PRIMARY KEY IDENTITY",
@@ -24,12 +30,18 @@ namespace REST_Service.Models
             IsDbGenerated = true)]
         public int Id { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the value of the column Navn
+        /// </summary>
         [Column(
             Name = "Navn",
             DbType = "VARCHAR(50) NOT NULL",
             CanBeNull = false)]
         public string Name { get; set; }
 
+        /// <summary>
+        /// Gets or sets the associated Student entityset
+        /// </summary>
         [Association(
             IsForeignKey = false,
             Name = "FK_Studerende_Hold",
@@ -41,6 +53,9 @@ namespace REST_Service.Models
             set { _students = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the associated HomeRoomSubject entity
+        /// </summary>
         [Association(
             Storage = "_homeRoomSubject",
             IsForeignKey = false,
@@ -53,8 +68,10 @@ namespace REST_Service.Models
             set { _homeRoomSubject.Entity = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the associated HomeRoomClass entitySet
+        /// </summary>
         [JsonIgnore]
-        [ScriptIgnore]
         public EntitySet<Subject> Subjects
         {
             get
@@ -69,6 +86,9 @@ namespace REST_Service.Models
             }
         }
 
+        /// <summary>
+        /// Makes sure that an instance of HomeRoomSubject Exists
+        /// </summary>
         private void EnsureHomeRoomSubjectExists()
         {
             if (HomeRoomSubject == null)

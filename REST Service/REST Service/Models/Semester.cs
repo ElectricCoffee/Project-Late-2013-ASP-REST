@@ -6,9 +6,15 @@ using System.Web;
 
 namespace REST_Service.Models
 {
+    /// <summary>
+    /// Linq to Sql mapping for the table Semester
+    /// </summary>
     [Table(Name = "Semester")]
     public class Semester : IModel
     {
+        /// <summary>
+        /// Gets the value of the column _id
+        /// </summary>
         [Column(
             Name = "_id",
             DbType = "INT NOT NULL PRIMARY KEY IDENTITY",
@@ -18,6 +24,9 @@ namespace REST_Service.Models
             IsDbGenerated = true)]
         public int Id { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the value of the column Navn
+        /// </summary>
         [Column(
             Name = "Navn",
             DbType = "VARCHAR(50) NOT NULL",

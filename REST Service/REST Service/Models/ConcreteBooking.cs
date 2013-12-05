@@ -13,13 +13,19 @@ namespace REST_Service.Models
         Finished = 2
     }
 
+    /// <summary>
+    /// Linq to Sql mapping for the table Konkret Booking
+    /// </summary>
     [Table(Name = "[Konkret Booking]")]
-    public class ConcreteBooking : IModel
+    public class ConcreteBooking : Booking
     {
         private EntityRef<Student> _student;
         private EntityRef<PossibleBooking> _possibleBooking;
         private EntityRef<Booking> _booking;
 
+        /// <summary>
+        /// Gets the value of the column _id
+        /// </summary>
         [Column(
             Name = "_id",
             DbType = "INT NOT NULL PRIMARY KEY IDENTITY",
@@ -27,38 +33,47 @@ namespace REST_Service.Models
             CanBeNull = false,
             IsPrimaryKey = true,
             IsDbGenerated = true)]
-        public int Id { get; private set; }
+        public override int Id { get; protected set; }
 
+        /// <summary>
+        /// Gets or sets the value of the column Type
+        /// </summary>
         [Column(
             Name = "Type",
             DbType = "TINYINT NOT NULL",
             CanBeNull = false)]
         private byte TypeNum { get; set; }
 
+        /// <summary>
+        /// Gets or sets the associated value of the column Type
+        /// </summary>
         public BookingType Type
         {
-            get
-            {
-                return (BookingType) TypeNum;
-            }
-            set
-            {
-                TypeNum = (byte) value;
-            }
+            get { return (BookingType) TypeNum; }
+            set { TypeNum = (byte) value; }
         }
 
+        /// <summary>
+        /// Gets or sets the value of the column Kommentar
+        /// </summary>
         [Column(
             Name = "Kommentar",
             DbType = "VARCHAR(150) NOT NULL",
             CanBeNull = false)]
         public string Comment { get; set; }
 
+        /// <summary>
+        /// Gets or sets the value of the column Status ændret
+        /// </summary>
         [Column(
             Name = "[Status ændret]",
             DbType = "TINYINT NOT NULL",
             CanBeNull = false)]
         private byte StatusChangedNum { get; set; }
 
+        /// <summary>
+        /// Gets or sets the associated value of the column Status ændret
+        /// </summary>
         public bool StatusChanged
         {
             get
@@ -77,6 +92,9 @@ namespace REST_Service.Models
             }
         }
 
+        /// <summary>
+        /// Gets or sets the value of the column Studerende_id
+        /// </summary>
         [Column(
             Name = "Studerende_id",
             DbType = "INT NOT NULL",
@@ -95,7 +113,10 @@ namespace REST_Service.Models
             set { _student.Entity = value; }
         }
 
-        public DateTime StartTime
+        /// <summary>
+        /// Gets or sets the value of the column StartTid of the disjointed table Booking
+        /// </summary>
+        public override DateTime StartTime
         {
             get
             {
@@ -109,7 +130,10 @@ namespace REST_Service.Models
             }
         }
 
-        public DateTime EndTime
+        /// <summary>
+        /// Gets or sets the value of the column SlutTid of the disjointed table Booking
+        /// </summary>
+        public override DateTime EndTime
         {
             get
             {
@@ -123,7 +147,10 @@ namespace REST_Service.Models
             }
         }
 
-        public Subject Subject
+        /// <summary>
+        /// Gets or sets the associated Subject entity of the disjointed table Booking
+        /// </summary>
+        public override Subject Subject
         {
             get { return _booking.Entity.Subject; }
             set
@@ -133,12 +160,18 @@ namespace REST_Service.Models
             }
         }
 
+        /// <summary>
+        /// Gets or sets the value of the column Mulig_booking_id
+        /// </summary>
         [Column(
             Name = "Mulig_booking_id",
             DbType = "INT NOT NULL",
             CanBeNull = false)]
         public int PossibleBookingId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the associated PossibleBooking entity
+        /// </summary>
         [Association(
             Storage = "_possibleBooking",
             IsForeignKey = true,
@@ -151,12 +184,18 @@ namespace REST_Service.Models
             set { _possibleBooking.Entity = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the value of the column Booking_id
+        /// </summary>
         [Column(
             Name = "Booking_id",
             DbType = "INT NOT NULL",
             CanBeNull = false)]
         public int BookingId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the associated Booking entiy
+        /// </summary>
         [Association(
             Storage = "_booking",
             IsForeignKey = true,
@@ -169,6 +208,9 @@ namespace REST_Service.Models
             set { _booking.Entity = value; }
         }
 
+        /// <summary>
+        /// Makes sure that an instance of Booking Exists
+        /// </summary>
         private void EnsureBookingExists()
         {
             if (Booking == null)

@@ -7,54 +7,37 @@ using System.Web;
 
 namespace REST_Service.Repositories
 {
-    public class ConcreteBookingRepository : IRepository<Models.ConcreteBooking>
+    /// <summary>
+    /// A specific implementation of IRepository specialized for ConcreteBooking entites
+    /// </summary>
+    public class ConcreteBookingRepository : SimpleRepository<Models.ConcreteBooking>
     {
-        private DataLayer.ManualBookingSystemDataContext _dataContext;
-        private Table<Models.Booking> _bookingTable;
-        private Table<Models.ConcreteBooking> _concreteBookingTable;
+        private Table<Models.Booking> _bookings;
 
+        /// <summary>
+        /// Creates a new ConcreteBookingRepository instance
+        /// </summary>
+        /// <param name="dataContext">An instance of ManualBookingSystemDataContext</param>
         public ConcreteBookingRepository(DataLayer.ManualBookingSystemDataContext dataContext)
+            : base(dataContext)
         {
-            _dataContext = dataContext;
-            _bookingTable = dataContext.Bookings;
-            _concreteBookingTable = dataContext.ConcreteBookings;
+            _bookings = _dataContext.Bookings;
         }
 
-        public void InsertOnSubmit(Models.ConcreteBooking concreteBooking)
+        /// <summary>
+        /// Enqueues a ConcreteBooking entity to be deleted from the table on submit
+        /// </summary>
+        /// <remarks>
+        /// If the associated Name entity was only used by the deleted ConcreteBooking entity,
+        /// then that Name entity is also deleted
+        /// </remarks>
+        /// <param name="concreteBooking">The ConcreteBooking entity to be deleted</param>
+        public override void DeleteOnSubmit(Models.ConcreteBooking concreteBooking)
         {
-            _concreteBookingTable.InsertOnSubmit(concreteBooking);
-        }
+            base.DeleteOnSubmit(concreteBooking);
 
-        public void DeleteOnSubmit(Models.ConcreteBooking concreteBooking)
-        {
-            _concreteBookingTable.Attach(concreteBooking);
-            _concreteBookingTable.DeleteOnSubmit(concreteBooking);
-
-            var booking = _bookingTable.SingleOrDefault(u => u.Id == concreteBooking.BookingId);
-
-            _bookingTable.Attach(booking);
-            _bookingTable.DeleteOnSubmit(booking);
-        }
-
-        public IEnumerable<Models.ConcreteBooking> Where(Func<Models.ConcreteBooking, bool> predicate)
-        {
-            var concreteBookings = _concreteBookingTable.AsEnumerable();
-            return concreteBookings.Where(predicate);
-        }
-
-        public IEnumerable<Models.ConcreteBooking> GetAll()
-        {
-            return _concreteBookingTable;
-        }
-
-        public Models.ConcreteBooking Single(Func<Models.ConcreteBooking, bool> predicate)
-        {
-            return _concreteBookingTable.AsEnumerable().FirstOrDefault(predicate);
-        }
-
-        public Models.ConcreteBooking GetById(int id)
-        {
-            return _concreteBookingTable.Single(m => m.Id.Equals(id));
+            var booking = _bookings.SingleOrDefault(b => b.Id == concreteBooking.BookingId);
+            _bookings.DeleteOnSubmit(booking);
         }
     }
 }

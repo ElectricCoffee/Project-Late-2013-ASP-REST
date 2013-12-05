@@ -9,12 +9,18 @@ using System.Web.Script.Serialization;
 
 namespace REST_Service.Models
 {
+    /// <summary>
+    /// Linq to Sql mapping for the table Lærer
+    /// </summary>
     [Table(Name = "Lærer")]
-    public class Teacher : IModel
+    public class Teacher : User
     {
         private EntityRef<User> _user;
         private EntitySet<Subject> _subjects;
 
+        /// <summary>
+        /// Gets the value of the column _id
+        /// </summary>
         [Column(
             Name = "_id",
             DbType = "INT NOT NULL PRIMARY KEY IDENTITY",
@@ -22,53 +28,59 @@ namespace REST_Service.Models
             CanBeNull = false,
             IsPrimaryKey = true,
             IsDbGenerated = true)]
-        public int Id { get; private set; }
+        public override int Id { get; protected set; }
 
-        public Name Name
+        /// <summary>
+        /// Gets or sets the associated Name entity
+        /// </summary>
+        public override Name Name
         {
-            get { return _user.Entity.Name; }
+            get { return User.Name; }
             set
             {
-                if (_user.Entity == null)
-                    _user.Entity = new User();
-                _user.Entity.Name = value;
+                EnsureUserExists();
+                User.Name = value;
             }
         }
 
-        public string Username
+        /// <summary>
+        /// Gets or sets the value of the column Brugernavn of the disjointed table Bruger
+        /// </summary>
+        public override string Username
         {
-            get
-            {
-                return _user.Entity.Username;
-            }
+            get { return User.Username; }
             set
             {
-                if (_user.Entity == null)
-                    _user.Entity = new User();
-                _user.Entity.Username = value;
+                EnsureUserExists();
+                User.Username = value;
             }
         }
 
-        public string Password
+        /// <summary>
+        /// Gets or sets the value of the column Password of the disjointed table Bruger
+        /// </summary>
+        public override string Password
         {
-            get
-            {
-                return _user.Entity.Password;
-            }
+            get { return User.Password; }
             set
             {
-                if (_user.Entity == null)
-                    _user.Entity = new User();
-                _user.Entity.Password = value;
+                EnsureUserExists();
+                User.Password = value;
             }
         }
 
+        /// <summary>
+        /// Gets or sets the value of the column Bruger_id
+        /// </summary>
         [Column(
             Name = "Bruger_id",
             DbType = "INT NOT NULL",
             CanBeNull = false)]
         public int UserId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the associated User entity
+        /// </summary>
         [Association(
             Storage = "_user",
             IsForeignKey = true,
@@ -81,6 +93,9 @@ namespace REST_Service.Models
             set { _user.Entity = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the associated Subjects entityset
+        /// </summary>
         [ScriptIgnore][JsonIgnore]
         [Association(
             IsForeignKey = false,
@@ -91,6 +106,15 @@ namespace REST_Service.Models
         {
             get { return _subjects; }
             set { _subjects = value; }
+        }
+
+        /// <summary>
+        /// Makes sure that an instance of User Exists
+        /// </summary>
+        private void EnsureUserExists()
+        {
+            if (User == null)
+                User = new User();
         }
     }
 }

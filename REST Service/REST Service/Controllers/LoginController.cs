@@ -12,7 +12,7 @@ namespace REST_Service.Controllers
 {
     public class LoginController : ApiController
     {
-        private Repositories.AuthentificationRepository _authRepo;
+        private Repositories.AuthenticationRepository _authRepo;
         private BookingSystemDataContext _db;
 
         public LoginController(BookingSystemDataContext context)
@@ -22,7 +22,7 @@ namespace REST_Service.Controllers
 
         public LoginController()
         {
-            _authRepo = Repositories.AuthentificationRepository.Instance;
+            _authRepo = Repositories.AuthenticationRepository.Instance;
             _db = new BookingSystemDataContext();
         }
 
