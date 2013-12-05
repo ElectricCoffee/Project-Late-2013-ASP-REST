@@ -22,6 +22,12 @@ namespace REST_Service.Models
             IsDbGenerated = true)]
         public int Id { get; private set; }
 
+        [Column(
+            Name = "Varighed",
+            DbType = "INT NOT NULL",
+            CanBeNull = false)]
+        public int Duration { get; set; }
+
         public DateTime StartTime
         {
             get
