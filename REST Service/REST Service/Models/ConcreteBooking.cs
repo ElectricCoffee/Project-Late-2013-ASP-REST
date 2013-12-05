@@ -16,6 +16,7 @@ namespace REST_Service.Models
     [Table(Name = "[Konkret Booking]")]
     public class ConcreteBooking : IModel
     {
+        private EntityRef<Student> _student;
         private EntityRef<PossibleBooking> _possibleBooking;
         private EntityRef<Booking> _booking;
 
@@ -74,6 +75,24 @@ namespace REST_Service.Models
                 else
                     StatusChangedNum = 0;
             }
+        }
+
+        [Column(
+            Name = "Studerende_id",
+            DbType = "INT NOT NULL",
+            CanBeNull = false)]
+        public int StudentId { get; set; }
+
+        [Association(
+            Storage = "_student",
+            IsForeignKey = true,
+            Name = "[FK_Konkret Booking_Studerende]",
+            ThisKey = "StudentId",
+            OtherKey = "Id")]
+        public Student Student
+        {
+            get { return _student.Entity; }
+            set { _student.Entity = value; }
         }
 
         public DateTime StartTime
