@@ -50,51 +50,11 @@ namespace REST_Service.Controllers
 
                     var subject = _db.GetTable<Models.Subject>().SingleOrDefault(s => s.Name == concreteBooking.Subject.Name);
 
-                    //Create obejct of model for the booking
-                    Models.Booking b = new Models.Booking
-                    {
-                        StartTime = concreteBooking.StartTime,
-                        EndTime = concreteBooking.EndTime,
-                        Subject = subject
-                    };
+                    concreteBooking.Subject = subject;
 
-                    //Add to database
-                    var table = _db.GetTable<Models.Booking>();
-                        table.InsertOnSubmit(b);
+                    _db.GetTable<Models.ConcreteBooking>().InsertOnSubmit(concreteBooking);
 
-                    try
-                    {
-                        //Write to database
-                        _db.SubmitChanges();
-                    }
-
-                    catch (Exception e)
-                    {
-                        Debug.WriteLine("DEBUG: " + e.Message);
-                        numberOfErrors++;
-                    }
-
-                    Models.ConcreteBooking kb = new Models.ConcreteBooking
-                    {
-                        BookingId = b.Id,
-                        Comment = concreteBooking.Comment,
-                        Type = concreteBooking.Type,
-                        StatusChanged = concreteBooking.StatusChanged
-
-                    };
-
-                    _db.GetTable<Models.ConcreteBooking>().InsertOnSubmit(kb);
-
-                    try
-                    {
-                        _db.SubmitChanges();
-                    }
-
-                    catch (Exception e)
-                    {
-                        Debug.WriteLine("DEBUG: " + e.Message);
-                        numberOfErrors++;
-                    }
+                    SubmitChanges(_db, ref numberOfErrors);
                 }
             }
 
@@ -122,6 +82,20 @@ namespace REST_Service.Controllers
             response.OK(bookings.AsEnumerable().SerializeToJsonObject());
 
             return response;
+        }
+
+        private void SubmitChanges(BookingSystemDataContext db, ref int errors)
+        {
+            try
+            {
+                db.SubmitChanges();
+            }
+
+            catch (Exception e)
+            {
+                Debug.WriteLine("DEBUG: " + e.Message);
+                errors++;
+            }
         }
     }
 }
