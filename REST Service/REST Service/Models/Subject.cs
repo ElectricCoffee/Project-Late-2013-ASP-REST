@@ -37,7 +37,7 @@ namespace REST_Service.Models
             CanBeNull = false)]
         private int SemesterId { get; set; }
 
-        [ScriptIgnore][JsonIgnore]
+        //[JsonIgnore]
         [Association(
             Storage = "_semester",
             IsForeignKey = true,
@@ -68,7 +68,7 @@ namespace REST_Service.Models
             set { _teacher.Entity = value; }
         }
 
-        [ScriptIgnore][JsonIgnore]
+        [JsonIgnore]
         [Association(
             Storage = "_homeRoomSubject",
             Name = "HoldFag_Fag",
@@ -80,7 +80,7 @@ namespace REST_Service.Models
             set { _homeRoomSubject.Entity = value; }
         }
 
-        [ScriptIgnore][JsonIgnore]
+        [JsonIgnore]
         public EntitySet<HomeRoomClass> HomeRoomClasses
         {
             get
@@ -95,7 +95,7 @@ namespace REST_Service.Models
             }
         }
 
-        [ScriptIgnore][JsonIgnore]
+        [JsonIgnore]
         [Association(
             IsForeignKey = false,
             Name = "FK_Booking_Fag",

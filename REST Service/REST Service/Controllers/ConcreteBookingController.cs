@@ -41,62 +41,59 @@ namespace REST_Service.Controllers
             var c = _db.Mulig_Bookings.FirstOrDefault(mb => mb._id == concreteBooking.PossibleBookingId);
             if (c != null)
             {
-                //Get Bookking from database if id matches
-                var x = _db.Bookings.FirstOrDefault(b => b._id == concreteBooking.BookingId);
+                //Get subject from database if subject id exists
+                var cls = _db.Fags.FirstOrDefault(f => f._id == c.Booking.Fag_id);
 
-                if (x != null)
+                if (cls != null)
                 {
-                    //Get subject from database if subject id exists
-                    var cls = _db.Fags.FirstOrDefault(f => f._id == x._id);
+                    var classId = cls._id;
 
-                    if (cls != null)
+                    var subject = _db.GetTable<Models.Subject>().SingleOrDefault(s => s.Name == concreteBooking.Subject.Name);
+
+                    //Create obejct of model for the booking
+                    Models.Booking b = new Models.Booking
                     {
-                        var classId = cls._id;
+                        StartTime = concreteBooking.StartTime,
+                        EndTime = concreteBooking.EndTime,
+                        Subject = subject
+                    };
 
-                        //Create obejct of model for the booking
-                        Models.Booking b = new Models.Booking
-                        {
-                            StartTime = concreteBooking.StartTime,
-                            EndTime = concreteBooking.EndTime,
-                            Subject = concreteBooking.Subject
-                        };
+                    //Add to database
+                    var table = _db.GetTable<Models.Booking>();
+                        table.InsertOnSubmit(b);
 
-                        //Add to databse
-                        _db.GetTable<Models.Booking>().InsertOnSubmit(b);
+                    try
+                    {
+                        //Write to database
+                        _db.SubmitChanges();
+                    }
 
-                        try
-                        {
-                            //Write to database
-                            _db.SubmitChanges();
-                        }
+                    catch (Exception e)
+                    {
+                        Debug.WriteLine("DEBUG: " + e.Message);
+                        numberOfErrors++;
+                    }
 
-                        catch (Exception e)
-                        {
-                            Debug.WriteLine("DEBUG: " + e.Message);
-                            numberOfErrors++;
-                        }
+                    Models.ConcreteBooking kb = new Models.ConcreteBooking
+                    {
+                        BookingId = b.Id,
+                        Comment = concreteBooking.Comment,
+                        Type = concreteBooking.Type,
+                        StatusChanged = concreteBooking.StatusChanged
 
-                        Models.ConcreteBooking kb = new Models.ConcreteBooking
-                        {
-                            BookingId = b.Id,
-                            Comment = concreteBooking.Comment,
-                            Type = concreteBooking.Type,
-                            StatusChanged = concreteBooking.StatusChanged
+                    };
 
-                        };
+                    _db.GetTable<Models.ConcreteBooking>().InsertOnSubmit(kb);
 
-                        _db.GetTable<Models.ConcreteBooking>().InsertOnSubmit(kb);
+                    try
+                    {
+                        _db.SubmitChanges();
+                    }
 
-                        try
-                        {
-                            _db.SubmitChanges();
-                        }
-
-                        catch (Exception e)
-                        {
-                            Debug.WriteLine("DEBUG: " + e.Message);
-                            numberOfErrors++;
-                        }
+                    catch (Exception e)
+                    {
+                        Debug.WriteLine("DEBUG: " + e.Message);
+                        numberOfErrors++;
                     }
                 }
             }
