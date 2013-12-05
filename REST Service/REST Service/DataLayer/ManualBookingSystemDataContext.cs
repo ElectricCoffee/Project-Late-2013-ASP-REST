@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Linq;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 
@@ -72,6 +73,33 @@ namespace REST_Service.DataLayer
         public Table<Models.PossibleBooking> PossibleBookings
         {
             get { return GetTable<Models.PossibleBooking>(); }
+        }
+
+        public void SafeSubmitChanges(ref int errorCounter)
+        {
+            try
+            {
+                SubmitChanges();
+            }
+
+            catch (Exception e)
+            {
+                Debug.WriteLine("DEBUG: " + e.Message);
+                errorCounter++;
+            }
+        }
+
+        public void SafeSubmitChanges()
+        {
+            try
+            {
+                SubmitChanges();
+            }
+
+            catch (Exception e)
+            {
+                Debug.WriteLine("DEBUG: " + e.Message);
+            }
         }
     }
 }

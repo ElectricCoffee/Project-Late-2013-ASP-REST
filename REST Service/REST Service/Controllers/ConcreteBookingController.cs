@@ -12,6 +12,7 @@ namespace REST_Service.Controllers
 {
     public class ConcreteBookingController : ApiController
     {
+        private const string RESPONSE_OK = "{\"Response\":\"OK\"}";
         /// <summary>
         /// Create connection to database
         /// </summary>
@@ -74,9 +75,31 @@ namespace REST_Service.Controllers
             //If there are errors send forbidden else send OK
             if (numberOfErrors != 0)
                 message.Forbidden("Errors: " + numberOfErrors);
-            else message.OK("{\"Response\":\"OK\"}");
+            else message.OK(RESPONSE_OK);
 
             //Returns the HttpResponseMessage
+            return message;
+        }
+
+        [HttpDelete]
+        public HttpResponseMessage Delete([FromUri] int concreteBookingId)
+        {
+            var message = new HttpResponseMessage();
+            var bookingRepo = new Repositories.BookingRepository(_db);
+
+            var concBook = bookingRepo.Single(cb => cb.Id == concreteBookingId);
+
+            if (concBook != null)
+            {
+                bookingRepo.DeleteOnSubmit(concBook);
+
+                _db.SafeSubmitChanges();
+
+                message.OK(RESPONSE_OK);
+            }
+            else 
+                message.Forbidden("Den valgte række i tabellen kunne ikke findes");
+
             return message;
         }
 
