@@ -16,15 +16,15 @@ namespace REST_Service.Controllers
         /// Create connection to database
         /// </summary>
         private string _connectionString = ConfigurationManager.ConnectionStrings["DummyConnection"].ConnectionString;
-        private BookingSystemDataContext _db;
+        private DataLayer.ManualBookingSystemDataContext _db;
 
-        public ConcreteBookingController(BookingSystemDataContext context)
+        public ConcreteBookingController(DataLayer.ManualBookingSystemDataContext context)
         {
             _db = context;
         }
         public ConcreteBookingController()
         {
-            _db = new BookingSystemDataContext(_connectionString);
+            _db = new DataLayer.ManualBookingSystemDataContext(_connectionString);
         }
 
         /// <summary>
@@ -35,29 +35,36 @@ namespace REST_Service.Controllers
         [HttpPost]
         public HttpResponseMessage Post([FromBody] Models.ConcreteBooking concreteBooking) {
 
+            // Set the number of Errors to 0
             var numberOfErrors = 0;
 
-            //Get possoble booking from database if it exist else returns null
-            var c = _db.Mulig_Bookings.FirstOrDefault(mb => mb._id == concreteBooking.PossibleBookingId);
-            if (c != null)
+            // make new repository of the possible booking database table
+            var possibleBookingRepo = new Repositories.PossibleBookingRepository(_db);
+
+            // find the first possible booking that mathces the id in the concrete booking
+            var possibleBooking = possibleBookingRepo.Single(pb => pb.Id == concreteBooking.PossibleBookingId);
+            if (possibleBooking != null)
             {
                 //Get subject from database if subject id exists
-                var cls = _db.Fags.FirstOrDefault(f => f._id == c.Booking.Fag_id);
-
+                var cls = _db.Subjects.FirstOrDefault(f => f.Id == possibleBooking.Subject.Id);
                 if (cls != null)
                 {
-                    var classId = cls._id;
+                    // create a student repository based on the student database table
+                    var studentRepo = new Repositories.StudentRepository(_db);
 
-                    var subject = _db.GetTable<Models.Subject>().SingleOrDefault(s => s.Name == concreteBooking.Subject.Name);
+                    // correct the subject field in the object
+                    concreteBooking.Subject = _db.GetTable<Models.Subject>().FirstOrDefault(s => s.Name.Equals(concreteBooking.Subject.Name));
 
-                    concreteBooking.Subject = subject;
+                    // correct the student field in the object
+                    concreteBooking.Student = studentRepo.Single(s => s.Username.Equals(concreteBooking.Student.Username));
 
+                    // insert the object to the table in the database
                     _db.GetTable<Models.ConcreteBooking>().InsertOnSubmit(concreteBooking);
 
-                    SubmitChanges(_db, ref numberOfErrors);
+                    // write the changes
+                    _db.SafeSubmitChanges(ref numberOfErrors);
                 }
             }
-
             else
                 numberOfErrors++;
 
@@ -82,20 +89,6 @@ namespace REST_Service.Controllers
             response.OK(bookings.AsEnumerable().SerializeToJsonObject());
 
             return response;
-        }
-
-        private void SubmitChanges(BookingSystemDataContext db, ref int errors)
-        {
-            try
-            {
-                db.SubmitChanges();
-            }
-
-            catch (Exception e)
-            {
-                Debug.WriteLine("DEBUG: " + e.Message);
-                errors++;
-            }
         }
     }
 }
