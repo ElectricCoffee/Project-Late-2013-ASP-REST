@@ -117,7 +117,9 @@ namespace REST_Service.Controllers
             var response = new HttpResponseMessage();
             var bookings = new Repositories.ConcreteBookingRepository(_db).GetAll();
 
-            response.OK(bookings.SerializeToJsonObject());
+            var json = bookings.SerializeToJsonObject();
+            Debug.WriteLine(json);
+            response.OK(json);
 
             return response;
         }

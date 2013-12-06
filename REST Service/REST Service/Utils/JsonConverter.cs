@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Script.Serialization;
@@ -31,8 +32,17 @@ namespace REST_Service.Utils
         /// <returns>String containing a JSON Object</returns>
         public static string SerializeToJsonObject<T>(this T input)
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(input);
-            //return new JavaScriptSerializer().Serialize(input);
+            string output = null;
+            try
+            {
+                output = Newtonsoft.Json.JsonConvert.SerializeObject(input);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+
+            return output;
         }
     }
 }
