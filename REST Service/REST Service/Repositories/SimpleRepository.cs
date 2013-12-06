@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Linq;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 
@@ -22,7 +23,14 @@ namespace REST_Service.Repositories
         public SimpleRepository(DataLayer.ManualBookingSystemDataContext dataContext)
         {
             _dataContext = dataContext;
-            _mainEntities = dataContext.GetTable<TModel>();
+            try
+            {
+                _mainEntities = dataContext.GetTable<TModel>();
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
         }
 
         /// <summary>
