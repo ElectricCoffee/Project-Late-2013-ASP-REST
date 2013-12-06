@@ -25,7 +25,7 @@ namespace REST_Service.Models
             CanBeNull = false,
             IsPrimaryKey = true,
             IsDbGenerated = true)]
-        public virtual int Id { get; protected set; }
+        public int Id { get; protected set; }
 
         /// <summary>
         /// Gets or sets the value of the column StartTid
@@ -34,7 +34,7 @@ namespace REST_Service.Models
             Name = "StartTid",
             DbType = "DATETIME NOT NULL",
             CanBeNull = false)]
-        public virtual DateTime StartTime { get; set; }
+        public DateTime StartTime { get; set; }
 
         /// <summary>
         /// Gets or sets the value of the column SlutTid
@@ -43,7 +43,7 @@ namespace REST_Service.Models
             Name = "SlutTid",
             DbType = "DATETIME NOT NULL",
             CanBeNull = false)]
-        public virtual DateTime EndTime { get; set; }
+        public DateTime EndTime { get; set; }
 
         /// <summary>
         /// Gets or sets the value of the column Fag_id
@@ -63,7 +63,7 @@ namespace REST_Service.Models
             Name = "FK_Booking_Fag",
             ThisKey = "SubjectId",
             OtherKey = "Id")]
-        public virtual Subject Subject
+        public Subject Subject
         {
             get { return _subject.Entity; }
             set { _subject.Entity = value; }

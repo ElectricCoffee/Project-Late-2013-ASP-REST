@@ -5,6 +5,8 @@ using System.Data.Linq.Mapping;
 using System.Linq;
 using System.Web;
 
+using REST_Service.Utils;
+
 namespace REST_Service.Models
 {
     /// <summary>
@@ -25,7 +27,7 @@ namespace REST_Service.Models
             CanBeNull = false,
             IsPrimaryKey = true,
             IsDbGenerated = true)]
-        public virtual int Id { get; protected set; }
+        public int Id { get; protected set; }
 
         /// <summary>
         /// Gets or sets the value of the column Brugernavn
@@ -34,7 +36,7 @@ namespace REST_Service.Models
             Name = "Brugernavn",
             DbType = "VARCHAR(50) NOT NULL",
             CanBeNull = false)]
-        public virtual string Username { get; set; }
+        public string Username { get; set; }
 
         /// <summary>
         /// Gets or sets the value of the column Password
@@ -43,7 +45,7 @@ namespace REST_Service.Models
             Name = "Password",
             DbType = "VARCHAR(50) NOT NULL",
             CanBeNull = false)]
-        public virtual string Password { get; set; }
+        public string Password { get; set; }
 
         /// <summary>
         /// Gets or sets the value of the column Navn_id
@@ -63,7 +65,7 @@ namespace REST_Service.Models
             Name = "Bruger_Navn",
             ThisKey = "NameId",
             OtherKey = "Id")]
-        public virtual Name Name
+        public Name Name
         {
             get { return _name.Entity; }
             set { _name.Entity = value; }

@@ -12,7 +12,7 @@ namespace REST_Service.Models
     /// Linq to Sql mapping for the table Studerende
     /// </summary>
     [Table(Name = "Studerende")]
-    public class Student : User
+    public class Student : IModel
     {
         private EntityRef<User> _user;
         private EntityRef<HomeRoomClass> _homeRoomClass;
@@ -27,12 +27,12 @@ namespace REST_Service.Models
             CanBeNull = false,
             IsPrimaryKey = true,
             IsDbGenerated = true)]
-        public override int Id { get; protected set; }
+        public int Id { get; protected set; }
 
         /// <summary>
         /// Gets or sets the associated Name entity
         /// </summary>
-        public override Name Name
+        public  Name Name
         {
             get { return User.Name; }
             set
@@ -45,7 +45,7 @@ namespace REST_Service.Models
         /// <summary>
         /// Gets or sets the value of the column Brugernavn of the disjointed table Bruger
         /// </summary>
-        public override string Username {
+        public string Username {
             get { return User.Username; }
             set
             {
@@ -57,7 +57,7 @@ namespace REST_Service.Models
         /// <summary>
         /// Gets or sets the value of the column Password of the disjointed table Bruger
         /// </summary>
-        public override string Password
+        public string Password
         {
             get { return User.Password; }
             set

@@ -12,7 +12,7 @@ namespace REST_Service.Models
     /// Linq to Sql mapping for the table Mulig Booking
     /// </summary>
     [Table(Name = "[Mulig Booking]")]
-    public class PossibleBooking : Booking
+    public class PossibleBooking : IModel
     {
         private EntityRef<Booking> _booking;
 
@@ -26,7 +26,7 @@ namespace REST_Service.Models
             CanBeNull = false,
             IsPrimaryKey = true,
             IsDbGenerated = true)]
-        public override int Id { get; protected set; }
+        public int Id { get; protected set; }
 
         /// <summary>
         /// Gets or sets the value of the column Varighed
@@ -40,7 +40,7 @@ namespace REST_Service.Models
         /// <summary>
         /// Gets or sets the value of the column StartTid of the disjointed table Booking
         /// </summary>
-        public override DateTime StartTime
+        public DateTime StartTime
         {
             get
             {
@@ -57,7 +57,7 @@ namespace REST_Service.Models
         /// <summary>
         /// Gets or sets the value of the column SlutTid of the disjointed table Booking
         /// </summary>
-        public override DateTime EndTime
+        public DateTime EndTime
         {
             get
             {
@@ -74,7 +74,7 @@ namespace REST_Service.Models
         /// <summary>
         /// Gets or sets the associated Subject entity of the disjointed table Booking
         /// </summary>
-        public override Subject Subject
+        public Subject Subject
         {
             get
             {
