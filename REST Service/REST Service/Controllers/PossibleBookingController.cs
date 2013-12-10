@@ -40,7 +40,7 @@ namespace REST_Service.Controllers
         public HttpResponseMessage Put([FromBody]PossibleBookingDelay delay)
         {
             var message = new HttpResponseMessage();
-            var booking = new Repositories.BookingRepository(_db).GetAll();
+            var bookings = new Repositories.BookingRepository(_db).GetAll();
             Models.PossibleBooking posBook        = null;
             List<Models.ConcreteBooking> conBooks = null;
             Models.Booking bookPos                = null;
@@ -52,14 +52,14 @@ namespace REST_Service.Controllers
                     posBook = new Repositories
                         .PossibleBookingRepository(_db)
                         .GetById(delay.Id);
-                    if (posBook == null) throw new NullReferenceException();
+                    if (posBook == null) throw new NullReferenceException("delay.Id did not match any stored IDs");
                 },
                 success: "{\"Response\":\"Success\"}",
                 failure: "Kunne ikke finde det korrekte id");
 
             if (posBook != null) 
             {
-                bookPos = booking.Single(book => book.Id == posBook.BookingId);
+                bookPos = bookings.Single(book => book.Id == posBook.BookingId);
 
                 message.Try<Exception>(
                     action: () =>
@@ -68,15 +68,37 @@ namespace REST_Service.Controllers
                             .ConcreteBookingRepository(_db)
                             .Where(conc => conc.PossibleBookingId == posBook.Id)
                             .ToList();
-                        if (conBooks == null) throw new NullReferenceException();
+                        if (conBooks == null) throw new NullReferenceException("posBook.Id did not match any elements in the list");
                     },
                     success: "{\"Response\":\"Success\"}",
                     failure: "Kunne ikke finde konkrete bookinger");
 
                 if (conBooks != null)
                 {
-                    bookCons = new List<Models.Booking>();
-                    conBooks.ForEach(e => bookCons.Add(booking.Single(book => book.Id == e.BookingId)));
+                    bool access = true;
+                    message.Try<Exception>(
+                        action: () =>
+                        {
+                            bookCons = new List<Models.Booking>();
+                            conBooks.ForEach(e => bookCons.Add(bookings.Single(book => book.Id == e.BookingId)));
+                            if (bookCons.Count > conBooks.Count)
+                            {
+                                access = false;
+                                throw new Exception("You have more bookings representing concrete bookings, than concrete bookings");
+                            }
+                            else if (bookCons.Count < conBooks.Count)
+                            {
+                                access = false;
+                                throw new Exception("You have less bookings representing concrete bookings, than concrete bookings");
+                            }
+                        },
+                        success: "{\"Response\":\"Success\"}",
+                        failure: "kunne ikke finde bookinger der matcher booking ID'et");
+
+                    if (access)
+                    {
+
+                    }
                 }
             }
 
