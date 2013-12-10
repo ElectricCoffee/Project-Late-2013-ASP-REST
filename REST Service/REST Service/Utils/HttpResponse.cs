@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -22,6 +23,33 @@ namespace REST_Service.Utils
             response.Content = new StringContent("");
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             response.ReasonPhrase = reason;
+        }
+
+        /// <summary>
+        /// A try-catch that returns either an OK if successful or a Forbidden if failed
+        /// </summary>
+        /// <typeparam name="E">Any kind of Exception</typeparam>
+        /// <param name="message">The HttpResponseMessage you want to </param>
+        /// <param name="action">The code you want to try</param>
+        /// <param name="success">A JSON string with the success message</param>
+        /// <param name="failure">A string message saying why it failed</param>
+        public static void Try<E>(
+            this HttpResponseMessage message, 
+            Action action, 
+            string success,
+            string failure = "Noget gik galt") 
+            where E : Exception
+        {
+            try
+            {
+                action();
+                message.OK(success);
+            }
+            catch (E ex)
+            {
+                Debug.WriteLine(ex.Message);
+                message.Forbidden(failure);
+            }
         }
     }
 }
