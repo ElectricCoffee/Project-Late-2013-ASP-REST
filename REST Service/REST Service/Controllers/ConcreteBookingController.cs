@@ -94,8 +94,8 @@ namespace REST_Service.Controllers
 
             if (book != null)
             {
-                using (var transaction = new TransactionScope())
-                {
+                //using (var transaction = new TransactionScope())
+                //{
                     bookingRepo.DeleteOnSubmit(book);
 
                     _db.SafeSubmitChanges();
@@ -103,7 +103,7 @@ namespace REST_Service.Controllers
                     if (bookingRepo.Single(b => b == book) == null)
                         message.OK(RESPONSE_OK);
                     else message.Forbidden("You done derped, son");
-                }
+                //}
             }
             else 
                 message.Forbidden("Den valgte række i tabellen kunne ikke findes");

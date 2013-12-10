@@ -51,11 +51,11 @@ namespace REST_Service.Repositories
 		/// <param name="booking">The Booking entity to be deleted</param>
 		public override void DeleteOnSubmit(Models.Booking booking)
 		{
-			var concreteBooking = _concreteBookings.SingleOrDefault(s => s.Id == booking.Id);
+			var concreteBooking = _concreteBookings.SingleOrDefault(cb => cb.BookingId == booking.Id);
 			if (concreteBooking != null)
 				_concreteBookings.DeleteOnSubmit(concreteBooking);
 			
-			var possibleBooking = _possibleBookings.SingleOrDefault(t => t.Id == booking.Id);
+			var possibleBooking = _possibleBookings.SingleOrDefault(mb => mb.BookingId == booking.Id);
 			if (possibleBooking != null)
 				_possibleBookings.DeleteOnSubmit(possibleBooking);
 
