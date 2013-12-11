@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Transactions;
 using REST_Service.Utils;
+using System.Data.SqlClient;
 
 namespace REST_Service.Controllers
 {
@@ -120,6 +121,23 @@ namespace REST_Service.Controllers
             var json = bookings.SerializeToJsonObject();
             Debug.WriteLine(json);
             response.OK(json);
+
+            return response;
+        }
+
+        [HttpPut]
+
+        public HttpResponseMessage Put([FromUri] int id, [FromBody] Models.ConcreteBooking changes)
+        {
+            var concreteBookingRepostory = new Repositories.ConcreteBookingRepository(_db);
+            var conBooking = concreteBookingRepostory.GetById(id);
+
+            conBooking.Type = (Models.BookingType) changes.Type;
+            
+            var response = HttpResponse.Try<SqlException>(
+                action: () => _db.SubmitChanges(),
+                success: "{\"Response\":\"Success\"}",
+                failure: "Kunne ikke finde en booking der matcher ID'et");
 
             return response;
         }
