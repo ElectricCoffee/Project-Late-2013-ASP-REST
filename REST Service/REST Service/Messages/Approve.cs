@@ -5,8 +5,8 @@ using System.Web;
 
 namespace REST_Service.Messages
 {
-    public class Approved
+    public class Approve
     {
-        public bool IsApproved { get; set; }
+        public bool Approved { get; set; }
     }
 }

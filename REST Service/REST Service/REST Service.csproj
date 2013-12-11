@@ -183,7 +183,7 @@
     </Compile>
     <Compile Include="Messages\PossibleBookingDelay.cs" />
     <Compile Include="Models\Administrator.cs" />
-    <Compile Include="Messages\Approved.cs" />
+    <Compile Include="Messages\Approve.cs" />
     <Compile Include="Models\Authentification.cs" />
     <Compile Include="Models\Booking.cs" />
     <Compile Include="Models\ConcreteBooking.cs" />

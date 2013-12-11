@@ -37,12 +37,27 @@ namespace REST_Service.Controllers
         }
 
         [HttpPut]
-        public HttpResponseMessage Put([FromUri] int id, [FromBody] Messages.Approved approvedMessage)
+        public HttpResponseMessage Put([FromUri] int id, [FromBody] Messages.Approve approvedMessage) //Put methode to approve students
+        {
+            var studentRepository = new Repositories.StudentRepository(_db); //get list of students, from database
+
+            var student = studentRepository.GetById(id); //get student by id
+            student.Approved = approvedMessage.Approved; //Set the student to approved
+
+            var response = HttpResponse.Try<SqlException>( 
+                action: () => _db.SubmitChanges(),
+                success: "{\"Response\":\"Success\"}",
+                failure: "Kunne ikke finde en studerende der matcher ID'et");
+
+            return response;
+        }
+
+        [HttpDelete]
+        public HttpResponseMessage Delete([FromUri] int id) //Methode to delete student by id
         {
             var studentRepository = new Repositories.StudentRepository(_db);
-
             var student = studentRepository.GetById(id);
-            student.Approved = approvedMessage.IsApproved;
+            studentRepository.DeleteOnSubmit(student);
 
             var response = HttpResponse.Try<SqlException>(
                 action: () => _db.SubmitChanges(),
