@@ -102,7 +102,7 @@ namespace REST_Service.Controllers
                     if (access)
                     {
                         Debug.WriteLine("Access granted");
-                        bookPos.StartTime.Add(delay.Duration);
+                        bookPos.StartTime = bookPos.StartTime.Add(delay.Duration);
 
                         foreach (var e in bookCons)
                         {
