@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Web.Http;
 using REST_Service.Utils;
 using Newtonsoft.Json.Converters;
+using System.Transactions;
 
 namespace REST_Service.Controllers
 {
@@ -39,6 +40,7 @@ namespace REST_Service.Controllers
         [HttpPut]
         public HttpResponseMessage Put([FromBody]PossibleBookingDelay delay)
         {
+            var successResponse = "{\"Response\":\"Success\"}";
             var message = new HttpResponseMessage();
             var bookings = new Repositories.BookingRepository(_db).GetAll();
             Models.PossibleBooking posBook        = null;
@@ -46,7 +48,7 @@ namespace REST_Service.Controllers
             Models.Booking bookPos                = null;
             List<Models.Booking> bookCons         = null;
 
-            message.Try<NullReferenceException>(
+            message = HttpResponse.Try<NullReferenceException>(
                 action: () =>
                 {
                     posBook = new Repositories
@@ -54,33 +56,37 @@ namespace REST_Service.Controllers
                         .GetById(delay.Id);
                     if (posBook == null) throw new NullReferenceException("delay.Id did not match any stored IDs");
                 },
-                success: "{\"Response\":\"Success\"}",
+                success: successResponse,
                 failure: "Kunne ikke finde det korrekte id");
 
             if (posBook != null) 
             {
+                Debug.WriteLine("posBook is not null");
                 bookPos = bookings.Single(book => book.Id == posBook.BookingId);
 
-                message.Try<Exception>(
+                message = HttpResponse.Try<Exception>(
                     action: () =>
                     {
                         conBooks = new Repositories
                             .ConcreteBookingRepository(_db)
                             .Where(conc => conc.PossibleBookingId == posBook.Id)
                             .ToList();
-                        if (conBooks == null) throw new NullReferenceException("posBook.Id did not match any elements in the list");
+                        if (conBooks == null || conBooks.Count == 0) throw new Exception("posBook.Id did not match any elements in the list");
                     },
-                    success: "{\"Response\":\"Success\"}",
+                    success: successResponse,
                     failure: "Kunne ikke finde konkrete bookinger");
 
-                if (conBooks != null)
+                if (conBooks != null && conBooks.Count > 0)
                 {
+                    Debug.WriteLine("conBooks is not null, and contains " + conBooks.Count + " items");
                     bool access = true;
-                    message.Try<Exception>(
+                    message = HttpResponse.Try<Exception>(
                         action: () =>
                         {
                             bookCons = new List<Models.Booking>();
                             conBooks.ForEach(e => bookCons.Add(bookings.Single(book => book.Id == e.BookingId)));
+                            Debug.WriteLine("conBooks length: " + conBooks.Count);
+                            Debug.WriteLine("bookCons length: " + bookCons.Count);
                             if (bookCons.Count > conBooks.Count)
                             {
                                 access = false;
@@ -92,17 +98,32 @@ namespace REST_Service.Controllers
                                 throw new Exception("You have less bookings representing concrete bookings, than concrete bookings");
                             }
                         },
-                        success: "{\"Response\":\"Success\"}",
+                        success: successResponse,
                         failure: "kunne ikke finde bookinger der matcher booking ID'et");
 
                     if (access)
                     {
+                        Debug.WriteLine("Access granted");
+                        bookPos.StartTime.Add(delay.Duration);
 
+                        bookCons.ForEach(e =>
+                        {
+                            e.StartTime.Add(delay.Duration);
+                            Debug.WriteLine("Start time: " + e.StartTime.ToString());
+                            e.EndTime.Add(delay.Duration);
+                            Debug.WriteLine("End time: " + e.EndTime.ToString());
+                        });
+
+                        using (var transaction = new TransactionScope())
+                        {
+                            _db.SafeSubmitChanges();
+                            Debug.WriteLine("Changes submitted");
+                        }
                     }
+                    else Debug.WriteLine("Access denied");
                 }
             }
-
-
+            
             return message;
         }
 

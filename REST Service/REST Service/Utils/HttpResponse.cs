@@ -33,13 +33,13 @@ namespace REST_Service.Utils
         /// <param name="action">The code you want to try</param>
         /// <param name="success">A JSON string with the success message</param>
         /// <param name="failure">A string message saying why it failed</param>
-        public static void Try<E>(
-            this HttpResponseMessage message, 
-            Action action, 
-            string success,
+        public static HttpResponseMessage Try<E>(
+            Action action,
+            string success = "{\"Response\":\"Success\"}",
             string failure = "Noget gik galt") 
             where E : Exception
         {
+            var message = new HttpResponseMessage();
             try
             {
                 action();
@@ -50,6 +50,8 @@ namespace REST_Service.Utils
                 Debug.WriteLine(ex.Message);
                 message.Forbidden(failure);
             }
+
+            return message;
         }
     }
 }
