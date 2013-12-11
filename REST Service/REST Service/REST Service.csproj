@@ -183,7 +183,7 @@
     </Compile>
     <Compile Include="Messages\PossibleBookingDelay.cs" />
     <Compile Include="Models\Administrator.cs" />
-    <Compile Include="Models\ApprovedMessage.cs" />
+    <Compile Include="Messages\Approved.cs" />
     <Compile Include="Models\Authentification.cs" />
     <Compile Include="Models\Booking.cs" />
     <Compile Include="Models\ConcreteBooking.cs" />
@@ -192,7 +192,6 @@
     <Compile Include="Models\IModel.cs" />
     <Compile Include="Models\Name.cs" />
     <Compile Include="Models\PossibleBooking.cs" />
-    <Compile Include="Messages\PossibleBookingMessage.cs" />
     <Compile Include="Models\Semester.cs" />
     <Compile Include="Models\Student.cs" />
     <Compile Include="Models\Subject.cs" />

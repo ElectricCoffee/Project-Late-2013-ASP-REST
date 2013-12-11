@@ -7,6 +7,6 @@ namespace REST_Service.Messages
 {
     public class Approved
     {
-        public bool Approved { get; set; }
+        public bool IsApproved { get; set; }
     }
 }

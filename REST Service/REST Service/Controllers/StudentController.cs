@@ -42,7 +42,7 @@ namespace REST_Service.Controllers
             var studentRepository = new Repositories.StudentRepository(_db);
 
             var student = studentRepository.GetById(id);
-            student.Approved = approvedMessage.Approved;
+            student.Approved = approvedMessage.IsApproved;
 
             var response = HttpResponse.Try<SqlException>(
                 action: () => _db.SubmitChanges(),
