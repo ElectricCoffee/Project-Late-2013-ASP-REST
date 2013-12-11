@@ -37,15 +37,14 @@ namespace REST_Service.Controllers
         }
 
         [HttpPut]
-        public HttpResponseMessage Put([FromUri] int studentId, [FromBody] Models.ApprovedMessage approvedMessage)
+        public HttpResponseMessage Put([FromUri] int id, [FromBody] Models.ApprovedMessage approvedMessage)
         {
-            var stundentRepository = new Repositories.StudentRepository(_db);
-            var response = new HttpResponseMessage();
+            var studentRepository = new Repositories.StudentRepository(_db);
 
-            var stundent = stundentRepository.GetById(studentId);
-            stundent.Approved = approvedMessage.Approved;
+            var student = studentRepository.GetById(id);
+            student.Approved = approvedMessage.Approved;
 
-            response = HttpResponseMessage.Try<SqlException>(
+            var response = HttpResponse.Try<SqlException>(
                 action: () => _db.SubmitChanges(),
                 success: "{\"Response\":\"Success\"}",
                 failure: "Kunne ikke finde en studerende der matcher ID'et");
