@@ -127,7 +127,7 @@ namespace REST_Service.Controllers
 
         [HttpPut]
 
-        public HttpResponseMessage Put([FromUri] int id, [FromBody] Models.ConcreteBooking changes)
+        public HttpResponseMessage Put([FromUri] int id, [FromBody] Models.ConcreteBooking changes) //Method to put a changes of type, to database
         {
             var concreteBookingRepostory = new Repositories.ConcreteBookingRepository(_db);
             var conBooking = concreteBookingRepostory.GetById(id);
