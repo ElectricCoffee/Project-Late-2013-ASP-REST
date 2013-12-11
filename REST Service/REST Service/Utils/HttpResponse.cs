@@ -11,6 +11,11 @@ namespace REST_Service.Utils
 {
     public static class HttpResponse
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="content"></param>
         public static void OK(this HttpResponseMessage message, string content)
         {
             message.StatusCode = HttpStatusCode.OK;
@@ -18,6 +23,11 @@ namespace REST_Service.Utils
             message.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="response"></param>
+        /// <param name="reason"></param>
         public static void Forbidden(this HttpResponseMessage response, string reason) {
             response.StatusCode = HttpStatusCode.Forbidden;
             response.Content = new StringContent("");
@@ -29,7 +39,6 @@ namespace REST_Service.Utils
         /// A try-catch that returns either an OK if successful or a Forbidden if failed
         /// </summary>
         /// <typeparam name="E">Any kind of Exception</typeparam>
-        /// <param name="message">The HttpResponseMessage you want to </param>
         /// <param name="action">The code you want to try</param>
         /// <param name="success">A JSON string with the success message</param>
         /// <param name="failure">A string message saying why it failed</param>

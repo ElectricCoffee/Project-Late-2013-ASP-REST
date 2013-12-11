@@ -37,7 +37,7 @@ namespace REST_Service.Controllers
         }
 
         [HttpPut]
-        public HttpResponseMessage Put([FromUri] int id, [FromBody] Models.ApprovedMessage approvedMessage)
+        public HttpResponseMessage Put([FromUri] int id, [FromBody] Messages.Approved approvedMessage)
         {
             var studentRepository = new Repositories.StudentRepository(_db);
 

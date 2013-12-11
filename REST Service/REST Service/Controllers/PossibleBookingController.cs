@@ -18,8 +18,6 @@ namespace REST_Service.Controllers
         private DataLayer.ManualBookingSystemDataContext _db;
         private int _numberOfErrors = 0;
 
-        private Models.PossibleBookingMessage _bookingModel = null;
-
         /// <summary>
         /// Creates a new instance of the Data Context to use locally
         /// </summary>
@@ -38,7 +36,7 @@ namespace REST_Service.Controllers
         }
 
         [HttpPut]
-        public HttpResponseMessage Put([FromBody]PossibleBookingDelay delay)
+        public HttpResponseMessage Put([FromUri]int id, [FromBody]Messages.PossibleBookingDelay delay)
         {
             var successResponse = "{\"Response\":\"Success\"}";
             var message = new HttpResponseMessage();
@@ -53,7 +51,7 @@ namespace REST_Service.Controllers
                 {
                     posBook = new Repositories
                         .PossibleBookingRepository(_db)
-                        .GetById(delay.Id);
+                        .GetById(id);
                     if (posBook == null) throw new NullReferenceException("delay.Id did not match any stored IDs");
                 },
                 success: successResponse,
@@ -106,19 +104,16 @@ namespace REST_Service.Controllers
                         Debug.WriteLine("Access granted");
                         bookPos.StartTime.Add(delay.Duration);
 
-                        bookCons.ForEach(e =>
+                        foreach (var e in bookCons)
                         {
-                            e.StartTime.Add(delay.Duration);
+                            e.StartTime = e.StartTime.Add(delay.Duration);
                             Debug.WriteLine("Start time: " + e.StartTime.ToString());
-                            e.EndTime.Add(delay.Duration);
+                            e.EndTime = e.EndTime.Add(delay.Duration);
                             Debug.WriteLine("End time: " + e.EndTime.ToString());
-                        });
-
-                        using (var transaction = new TransactionScope())
-                        {
-                            _db.SafeSubmitChanges();
-                            Debug.WriteLine("Changes submitted");
                         }
+
+                        _db.SafeSubmitChanges();
+                        Debug.WriteLine("Changes submitted");
                     }
                     else Debug.WriteLine("Access denied");
                 }
@@ -169,10 +164,5 @@ namespace REST_Service.Controllers
 
             return response;
         }
-    }
-
-    public class PossibleBookingDelay {
-        public int Id {get;set;}
-        public TimeSpan Duration {get;set;}
     }
 }
