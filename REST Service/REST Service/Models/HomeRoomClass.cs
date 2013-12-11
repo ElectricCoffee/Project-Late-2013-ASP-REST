@@ -42,6 +42,7 @@ namespace REST_Service.Models
         /// <summary>
         /// Gets or sets the associated Student entityset
         /// </summary>
+        [JsonIgnore]
         [Association(
             IsForeignKey = false,
             Name = "FK_Studerende_Hold",
@@ -56,6 +57,7 @@ namespace REST_Service.Models
         /// <summary>
         /// Gets or sets the associated HomeRoomSubject entity
         /// </summary>
+        [JsonIgnore]
         [Association(
             Storage = "_homeRoomSubject",
             IsForeignKey = false,
