@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using REST_Service.Utils;
+using System.Data.SqlClient;
 
 namespace REST_Service.Controllers
 {
@@ -31,6 +32,23 @@ namespace REST_Service.Controllers
 
             var students = studentRepository.Where(s => s.Approved == false); //Get the students where approved is false
             response.OK(students.SerializeToJsonObject()); 
+
+            return response;
+        }
+
+        [HttpPut]
+        public HttpResponseMessage Put([FromUri] int studentId, [FromBody] Models.ApprovedMessage approvedMessage)
+        {
+            var stundentRepository = new Repositories.StudentRepository(_db);
+            var response = new HttpResponseMessage();
+
+            var stundent = stundentRepository.GetById(studentId);
+            stundent.Approved = approvedMessage.Approved;
+
+            response = HttpResponseMessage.Try<SqlException>(
+                action: () => _db.SubmitChanges(),
+                success: "{\"Response\":\"Success\"}",
+                failure: "Kunne ikke finde en studerende der matcher ID'et");
 
             return response;
         }
