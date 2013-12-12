@@ -24,18 +24,63 @@ namespace REST_Service.Controllers
             _db = new DataLayer.ManualBookingSystemDataContext(_connectionString);
         }
 
+        /// <summary>
+        /// Gets a list of students with the given approval level
+        /// </summary>
+        /// <param name="approved">A boolean that defines approval level</param>
+        /// <returns>A HttpResponseMessage containing either an OK with the list or a Forbidden with an error</returns>
         [HttpGet]
-        public HttpResponseMessage Get()
+        public HttpResponseMessage Get([FromUri] bool? approved = null)
         {
-            var studentRepository = new Repositories.StudentRepository(_db); // Get student list
-            var response = new HttpResponseMessage(); // Make new HttpResponse message
+            var studentRepository = new Repositories.StudentRepository(_db); 
 
-            var students = studentRepository.Where(s => s.Approved == false); //Get the students where approved is false
-            response.OK(students.SerializeToJsonObject()); 
+            return HttpResponse.Try<IEnumerable<Models.Student>, Exception>(
+                successAction: () =>
+                {
+                    var students = approved == null ? // if approved is null
+                        studentRepository.GetAll() :  // set students to the full list
+                        studentRepository.Where(s => s.Approved == approved); // else get the students that match the approval
+
+                    if (students.Count() < 1) 
+                        throw new Exception("Could not find students");
+
+                    return students; // returns the response if it doesnt't throw (converts to json automatically)
+                },
+                failure: "Kunne ikke hente listen af studerende");
+        }
+
+        /// <summary>
+        /// Gets the amount of students with the given approval level
+        /// </summary>
+        /// <param name="approved">A boolean that defines approval level</param>
+        /// <returns>A HttpResponseMessage containing either an OK with the count or a Forbidden with an error</returns>
+        [HttpGet]
+        public HttpResponseMessage Count([FromUri] bool? approved = null)
+        {
+            var studentRepository = new Repositories.StudentRepository(_db);
+
+            var response = HttpResponse.Try<int, Exception>(
+                successAction: () =>
+                {
+                    var students = approved == null ? // if approval is null
+                        studentRepository.GetAll() :  // get the full list of students
+                        studentRepository.Where(s => s.Approved == approved); // else 
+
+                    return students.Count(); // returns the response if it doesnt't throw (converts to json automatically)
+                },
+                failure: "Kunne ikke hente antallet af studerende");
+
+            response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("text/plain");
 
             return response;
         }
 
+        /// <summary>
+        /// Sets the approval level on a student based on the ID
+        /// </summary>
+        /// <param name="id">The ID of the student</param>
+        /// <param name="approvedMessage">The approval level</param>
+        /// <returns>Either an OK with a generic response message, or a Forbidden with an error</returns>
         [HttpPut]
         public HttpResponseMessage Put([FromUri] int id, [FromBody] Messages.Approve approvedMessage) //Put methode to approve students
         {
@@ -52,6 +97,11 @@ namespace REST_Service.Controllers
             return response;
         }
 
+        /// <summary>
+        /// Deletes a student with the given ID
+        /// </summary>
+        /// <param name="id">The ID of the student</param>
+        /// <returns>Either an OK with a generic response message, or a Forbidden with an error</returns>
         [HttpDelete]
         public HttpResponseMessage Delete([FromUri] int id) //Methode to delete student by id
         {

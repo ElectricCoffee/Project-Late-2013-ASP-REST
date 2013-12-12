@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Routing;
 
 namespace REST_Service
 {
@@ -18,6 +19,17 @@ namespace REST_Service
                 name: "Authentication",
                 routeTemplate: "authenticate",
                 defaults: new { controller = "login" }
+            );
+            config.Routes.MapHttpRoute(
+                name: "ActionRoute",
+                routeTemplate: "api/{controller}/{action}/{id}",
+                defaults: new { id = RouteParameter.Optional }
+            );
+            config.Routes.MapHttpRoute(
+                name: "GET Route",
+                routeTemplate: "api/{controller}/{id}",
+                defaults: new { action = "Get", id = RouteParameter.Optional },
+                constraints: new { httpMethod = new HttpMethodConstraint("GET") }
             );
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",

@@ -42,6 +42,7 @@ namespace REST_Service.Utils
         /// <param name="action">The code you want to try</param>
         /// <param name="success">A JSON string with the success message</param>
         /// <param name="failure">A string message saying why it failed</param>
+        /// <returns>A new HttpResponseMessage</returns>
         public static HttpResponseMessage Try<E>(
             Action action,
             string success = "{\"Response\":\"Success\"}",
@@ -53,6 +54,33 @@ namespace REST_Service.Utils
             {
                 action();
                 message.OK(success);
+            }
+            catch (E ex)
+            {
+                Debug.WriteLine(ex.Message);
+                message.Forbidden(failure);
+            }
+
+            return message;
+        }
+
+        /// <summary>
+        /// A try-catch that returns either an OK if successful or a Forbidden if failed
+        /// </summary>
+        /// <typeparam name="S">The object type to serialize to JSON</typeparam>
+        /// <typeparam name="E">Any Exception</typeparam>
+        /// <param name="successAction">A Func that returns any given object</param>
+        /// <param name="failure">A string message saying why it failed</param>
+        /// <returns>A new HttpResponseMessage</returns>
+        public static HttpResponseMessage Try<S, E>(
+            Func<S> successAction,
+            string failure = "Noget gik galt")
+            where E : Exception
+        {
+            var message = new HttpResponseMessage();
+            try
+            {
+                message.OK(successAction().SerializeToJsonObject());
             }
             catch (E ex)
             {
