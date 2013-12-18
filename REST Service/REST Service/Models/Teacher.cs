@@ -35,7 +35,11 @@ namespace REST_Service.Models
         /// </summary>
         public Name Name
         {
-            get { return User.Name; }
+            get
+            {
+                EnsureUserExists();
+                return User.Name;
+            }
             set
             {
                 EnsureUserExists();
